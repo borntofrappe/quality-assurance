@@ -6,6 +6,47 @@ Notes and solutions to earn the [Quality Assurance](https://www.freecodecamp.org
 
 ### [Metric-Imperial Converter](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/metric-imperial-converter)
 
+```json
+{
+  "initNum": 1,
+  "initUnit": "gal",
+  "returnNum": 3.78541,
+  "returnUnit": "L",
+  "string": "1 gallons converts to 3.78541 liters"
+}
+```
+
+```bash
+Running Tests...
+  Unit Tests
+    ✓ convertHandler should correctly read a whole number input.
+    ✓ convertHandler should correctly read a decimal number input.
+    ✓ convertHandler should correctly read a fractional input.
+    ✓ convertHandler should correctly read a fractional input with a decimal.
+    ✓ convertHandler should correctly return an error on a double-fraction (i.e. 3/2/3).
+    ✓ convertHandler should correctly default to a numerical input of 1 when no numerical input is provided.
+    ✓ convertHandler should correctly read each valid input unit.
+    ✓ convertHandler should correctly return an error for an invalid input unit.
+    ✓ convertHandler should return the correct return unit for each valid input unit.
+    ✓ convertHandler should correctly return the spelled-out string unit for each valid input unit.
+    ✓ convertHandler should correctly convert gal to L.
+    ✓ convertHandler should correctly convert L to gal.
+    ✓ convertHandler should correctly convert mi to km.
+    ✓ convertHandler should correctly convert km to mi.
+    ✓ convertHandler should correctly convert lbs to kg.
+    ✓ convertHandler should correctly convert kg to lbs.
+
+  Functional Tests
+    ✓ Convert a valid input such as 10L: GET request to /api/convert.
+    ✓ Convert an invalid input such as 32g: GET request to /api/convert.
+    ✓ Convert an invalid number such as 3/7.2/4kg: GET request to /api/convert.
+    ✓ Convert an invalid number AND unit such as 3/7.2/4kilomegagram: GET request to /api/convert. (128ms)
+    ✓ Convert with no number such as kg: GET request to /api/convert.
+
+
+  21 passing (259ms)
+```
+
 ### [Issue Tracker](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/issue-tracker)
 
 ### [Personal Library](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/personal-library)
@@ -415,5 +456,3 @@ browser.fill("surname", "Colombo").then(() => {
 ```
 
 While `success` checks the status code to match 200, `text` asserts the text of an element specified through a CSS selector and `elements` checks the number of elements nested in the selected container.
-
-<!-- ### Advanced Node and Express -->
