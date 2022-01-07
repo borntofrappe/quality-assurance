@@ -117,11 +117,15 @@ module.exports = function (app) {
       const { _id } = req.body;
 
       if (!_id) {
-        return res.json({ error: "no update field(s) sent", _id: _id });
+        return res.json({ error: "missing _id" });
       }
 
       const { issues } = projects.find((d) => d.name === req.params.project);
       const issue = issues.find((d) => d._id === _id);
+
+      if (!issue) {
+        return res.json({ error: "could not update", _id });
+      }
 
       const {
         issue_title,
@@ -132,24 +136,24 @@ module.exports = function (app) {
         open,
       } = req.body;
 
-      try {
-        Object.entries({
-          issue_title,
-          issue_text,
-          created_by,
-          assigned_to,
-          status_text,
-        }).forEach(([key, value]) => {
-          if (value) {
-            issue[key] = value;
-          }
-        });
+      const entries = Object.entries({
+        issue_title,
+        issue_text,
+        created_by,
+        assigned_to,
+        status_text,
+      }).filter(([, value]) => value !== undefined);
 
-        if (open) {
-          issue.open = false;
-        }
-      } catch (error) {
-        return res.json({ error: "could not update", _id });
+      if (entries.length === 0 && open === undefined) {
+        return res.json({ error: "no update field(s) sent", _id });
+      }
+
+      entries.forEach(([key, value]) => {
+        issue[key] = value;
+      });
+
+      if (open) {
+        issue.open = false;
       }
 
       res.json({ result: "successfully updated", _id });
