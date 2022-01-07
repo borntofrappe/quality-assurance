@@ -5,13 +5,13 @@ function ConvertHandler() {
     if (num) {
       const nums = num[0].split("/");
       if (nums.length > 2) {
-        return "invalid number";
+        throw new Error("invalid number");
       }
 
       for (let num of nums) {
         const dots = num.match(/\./g);
         if (dots && dots.length > 1) {
-          return "invalid number";
+          throw new Error("invalid number");
         }
       }
 
@@ -36,7 +36,7 @@ function ConvertHandler() {
       return units[unit[0].toLowerCase()];
     }
 
-    return "invalid unit";
+    throw new Error("invalid unit");
   };
 
   this.getReturnUnit = function (initUnit) {

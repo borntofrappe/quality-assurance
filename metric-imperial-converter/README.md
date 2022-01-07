@@ -174,3 +174,34 @@ The section is more guided than the previous two, since the assignment goes thro
 For the unit test consider the value returned by the `convertHandler` instance with the `assert` method.
 
 For the functional tests perform GET requests through the `chai-http` module and evaluate the response.
+
+### errors
+
+I chose to ultimately revisit the project connected to the error messages. The application is supposed to highlight an error with an invalid number, unit, or both.
+
+In the controller logic, instead of returning a string, throw an error for the prescribed instances.
+
+```diff
+-return "invalid number";
++throw new Error("invalid number");
+```
+
+In the unit test assert the errors through `assert.throws`.
+
+```js
+assert.throws(() => convertHandler.getNum("3/2/3"), "invalid number");
+```
+
+In the API route modify the logic to condition the conversion to `initNum` and `initUnit` actually describing a valid number and unit.
+
+```js
+try {
+  initNum = convertHandler.getNum(input);
+} catch (e) {}
+
+try {
+  initUnit = convertHandler.getUnit(input);
+} catch (e) {}
+```
+
+I chose to include two `try` blocks since the assignment asks to send a specific string when both functions raise an error.
