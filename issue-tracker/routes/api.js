@@ -49,39 +49,36 @@ module.exports = function (app) {
         updated_on,
       } = req.query;
 
-      if (assigned_to) {
-        issues = issues.filter((d) => d.assigned_to === assigned_to);
-      }
-      if (status_text) {
-        issues = issues.filter((d) => d.status_text === status_text);
-      }
-      if (open) {
-        issues = issues.filter((d) => d.open === open);
-      }
-      if (_id) {
-        issues = issues.filter((d) => d._id === _id);
-      }
-      if (issue_title) {
-        issues = issues.filter((d) => d.issue_title === issue_title);
-      }
-      if (issue_text) {
-        issues = issues.filter((d) => d.issue_text === issue_text);
-      }
-      if (created_by) {
-        issues = issues.filter((d) => d.created_by === created_by);
-      }
-      if (created_on) {
-        issues = issues.filter((d) => d.created_on === created_on);
-      }
-      if (updated_on) {
-        issues = issues.filter((d) => d.updated_on === updated_on);
-      }
+      Object.entries({
+        assigned_to,
+        status_text,
+        open,
+        _id,
+        issue_title,
+        issue_text,
+        created_by,
+        created_on,
+        updated_on,
+      })
+        .filter(([, value]) => value !== undefined)
+        .forEach(([key, value]) => {
+          issues = issues.filter((d) => d[key].toString() === value);
+        });
 
       res.json(issues);
     })
 
     .post(function (req, res) {
-      const project = projects.find((d) => d.name === req.params.project);
+      let project = projects.find((d) => d.name === req.params.project);
+
+      if (!project) {
+        project = {
+          name: req.params.project,
+          issues: [],
+        };
+
+        projects.push(project);
+      }
 
       const { issue_title, issue_text, created_by } = req.body;
 
@@ -120,13 +117,6 @@ module.exports = function (app) {
         return res.json({ error: "missing _id" });
       }
 
-      const { issues } = projects.find((d) => d.name === req.params.project);
-      const issue = issues.find((d) => d._id === _id);
-
-      if (!issue) {
-        return res.json({ error: "could not update", _id });
-      }
-
       const {
         issue_title,
         issue_text,
@@ -148,6 +138,13 @@ module.exports = function (app) {
         return res.json({ error: "no update field(s) sent", _id });
       }
 
+      const { issues } = projects.find((d) => d.name === req.params.project);
+      const issue = issues.find((d) => d._id === _id);
+
+      if (!issue) {
+        return res.json({ error: "could not update", _id });
+      }
+
       entries.forEach(([key, value]) => {
         issue[key] = value;
       });
@@ -155,6 +152,8 @@ module.exports = function (app) {
       if (open) {
         issue.open = false;
       }
+
+      issue.updated_on = new Date();
 
       res.json({ result: "successfully updated", _id });
     })

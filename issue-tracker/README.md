@@ -1,11 +1,5 @@
 # Issue Tracker
 
-<!--
-https://boilerplate-project-issuetracker.borntofrappe.repl.co
-
-https://github.com/borntofrappe/quality-assurance/tree/master/issue-tracker
- -->
-
 Create an application similar [to the example Issue Tracker](https://issue-tracker.freecodecamp.rocks/).
 
 ## Links
@@ -104,3 +98,22 @@ Create all of the functional tests in `tests/2_functional-tests.js`
 - Delete an issue with an invalid `_id`: DELETE request to `/api/issues/{project}`
 
 - Delete an issue with missing `_id`: DELETE request to `/api/issues/{project}`
+
+### issues
+
+- put request. The order of the assignment is that the request should handle missing input fields first, a bad id afterwards
+
+- get. The testing suite creates a new project with a post request, so to test update operations. update post to create a new project with req.params.project
+
+```bash
+fcc-project
+fcc-project
+fcc-project
+get_issues_test_323535
+get_issues_test_323570
+fcc-project
+fcc-project
+requested
+```
+
+- update field with successful put request `updated_on`

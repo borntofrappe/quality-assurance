@@ -429,6 +429,7 @@ suite("Functional Tests", function () {
       .put("/api/issues/apitest")
       .send({
         _id,
+        issue_title: "PUT/4",
       })
       .end(function (err, res) {
         assert.equal(res.status, 200);
