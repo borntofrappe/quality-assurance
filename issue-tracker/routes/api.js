@@ -71,6 +71,7 @@ module.exports = function (app) {
     .post(function (req, res) {
       let project = projects.find((d) => d.name === req.params.project);
 
+      // create a project if one does not exist
       if (!project) {
         project = {
           name: req.params.project,
@@ -149,6 +150,7 @@ module.exports = function (app) {
         issue[key] = value;
       });
 
+      // the checkbox to close the issue has a name of `open`
       if (open) {
         issue.open = false;
       }

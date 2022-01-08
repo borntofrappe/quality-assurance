@@ -49,6 +49,44 @@ Running Tests...
 
 ### [Issue Tracker](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/issue-tracker)
 
+```json
+{
+  "assigned_to": "borntofrappe",
+  "status_text": "in progress",
+  "open": true,
+  "_id": "7850679728413206",
+  "issue_title": "App routes",
+  "issue_text": "Handle app routes in routes/api.js",
+  "created_by": "borntofrappe",
+  "created_on": "2022-01-07T14:52:47.336Z",
+  "updated_on": "2022-01-07T14:52:47.336Z"
+}
+```
+
+```bash
+Running Tests...
+
+
+  Functional Tests
+    ✓ Create an issue with every field: POST request to `/api/issues/{project}`
+    ✓ Create an issue with only required fields: POST request to `/api/issues/{project}` (63ms)
+    ✓ Create an issue with missing required fields: POST request to `/api/issues/{project}`
+    ✓ View issues on a project: GET request to `/api/issues/{project}`
+    ✓ View issues on a project with one filter: GET request to `/api/issues/{project}` (80ms)
+    ✓ View issues on a project with multiple filters: GET request to `/api/issues/{project}`
+    ✓ Update one field on an issue: PUT request to `/api/issues/{project}`
+    ✓ Update multiple fields on an issue: PUT request to `/api/issues/{project}`
+    ✓ Update an issue with missing `_id`: PUT request to `/api/issues/{project}`
+    ✓ Update an issue with no fields to update: PUT request to `/api/issues/{project}`
+    ✓ Update an issue with an invalid `_id`: PUT request to `/api/issues/{project}` (72ms)
+    ✓ Delete an issue: DELETE request to `/api/issues/{project}`
+    ✓ Delete an issue with an invalid `_id`: DELETE request to `/api/issues/{project}`
+    ✓ Delete an issue with missing `_id`: DELETE request to `/api/issues/{project}`
+
+
+  14 passing (531ms)
+```
+
 ### [Personal Library](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/personal-library)
 
 ### [Sudoku Solver](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/sudoku-solver)

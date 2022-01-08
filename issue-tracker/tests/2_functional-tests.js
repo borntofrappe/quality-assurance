@@ -7,6 +7,11 @@ chai.use(chaiHttp);
 
 suite("Functional Tests", function () {
   test("Create an issue with every field: POST request to `/api/issues/{project}`", function (done) {
+    /* test:
+      - that the object has all the prescribed keys
+      - that the object includes the key-value pairs of the issue sent in the request plus the 'open' default value
+      - that the date is approximately similar to the instance created before sending the request
+    */
     const issue = {
       issue_title: "POST/1",
       issue_text:
@@ -19,19 +24,11 @@ suite("Functional Tests", function () {
 
     const date = new Date();
 
-    /* test:
-    - a response of 200
-    - that the object has all the prescribed keys
-    - that the object includes the key-value pairs of the issue sent in the request plus the 'open' default value
-    - that the date is approximately similar to the instance created before sending the request
-    */
     chai
       .request(server)
       .post("/api/issues/apitest")
       .send(issue)
       .end(function (err, res) {
-        assert.equal(res.status, 200);
-
         assert.hasAllKeys(res.body, [
           "assigned_to",
           "status_text",
@@ -66,6 +63,11 @@ suite("Functional Tests", function () {
   });
 
   test("Create an issue with only required fields: POST request to `/api/issues/{project}`", function (done) {
+    /* test:
+      - that the object has all the prescribed keys
+      - that the object includes the key-value pairs of the issue sent in the request plus the optional and the 'open' default value
+      - that the date is approximately similar to the instance created before sending the request
+    */
     const issue = {
       issue_title: "POST/2",
       issue_text:
@@ -120,6 +122,9 @@ suite("Functional Tests", function () {
   });
 
   test("Create an issue with missing required fields: POST request to `/api/issues/{project}` ", function (done) {
+    /* test:
+      - that the object highlights the prescribed error message
+    */
     const issue = {
       issue_title: "POST/3",
     };
@@ -138,7 +143,11 @@ suite("Functional Tests", function () {
   });
 
   test("View issues on a project: GET request to `/api/issues/{project}`", function (done) {
-    // first add an issue to ensure the array has at least an item
+    /* first create an issue with a POST request
+    only afterwards test:
+      - that the request returns an array
+      - that the array includes the issue sent with the POST request specifically
+    */
     const issue = {
       issue_title: "GET/1",
       issue_text:
@@ -151,11 +160,6 @@ suite("Functional Tests", function () {
       .post("/api/issues/apitest")
       .send(issue)
       .end(function (err, res) {
-        /* test:
-        - a response of 200
-        - that the value returned is an array
-        - that the array contains the registered issue
-        */
         chai
           .request(server)
           .get("/api/issues/apitest")
@@ -179,6 +183,11 @@ suite("Functional Tests", function () {
   });
 
   test("View issues on a project with one filter: GET request to `/api/issues/{project}`", function (done) {
+    /* first create an issue with a POST request
+    only afterwards test:
+      - that the request returns an array
+      - that the array includes only issues matching the filter condition
+    */
     const issue = {
       issue_title: "GET/2",
       issue_text:
@@ -191,11 +200,6 @@ suite("Functional Tests", function () {
       .post("/api/issues/apitest")
       .send(issue)
       .end(function (err, res) {
-        /* test:
-        - a response of 200
-        - that the value returned is an array
-        - that the array contains only the issues matching the filter
-        */
         chai
           .request(server)
           .get(`/api/issues/apitest?created_by=${issue.created_by}`)
@@ -214,6 +218,11 @@ suite("Functional Tests", function () {
   });
 
   test("View issues on a project with multiple filters: GET request to `/api/issues/{project}`", function (done) {
+    /* first create an issue with a POST request
+    only afterwards test:
+      - that the request returns an array
+      - that the array includes only issues matching the filter conditions
+    */
     const issue = {
       issue_title: "GET/3",
       issue_text:
@@ -226,11 +235,6 @@ suite("Functional Tests", function () {
       .post("/api/issues/apitest")
       .send(issue)
       .end(function (err, res) {
-        /* test:
-          - a response of 200
-          - that the value returned is an array
-          - that the array contains only the issues matching the multiple conditions
-        */
         chai
           .request(server)
           .get(
@@ -254,6 +258,15 @@ suite("Functional Tests", function () {
   });
 
   test("Update one field on an issue: PUT request to `/api/issues/{project}`", function (done) {
+    /* first create an issue with a POST request
+    second retrieve the issue and test:
+      - the issue exists
+    third update the issue by _id and test:
+      - the response returns an object with the prescribed success message
+    finally retrieve the issues and test:
+      - the array includes the issue with the _id
+      - the issue is updated in the prescribed field
+    */
     const issue = {
       issue_title: "PUT/1",
       issue_text:
@@ -277,6 +290,8 @@ suite("Functional Tests", function () {
                 d.created_by === issue.created_by
             );
 
+            assert.isDefined(existingIssue);
+
             const { _id } = existingIssue;
 
             chai
@@ -297,8 +312,10 @@ suite("Functional Tests", function () {
                   .request(server)
                   .get(`/api/issues/apitest?_id=${_id}`)
                   .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.isFalse(res.body[0].open);
+                    const updatedIssue = res.body[0];
+                    assert.isDefined(updatedIssue);
+                    assert.strictEqual(updatedIssue._id, _id);
+                    assert.isFalse(updatedIssue.open);
 
                     done();
                   });
@@ -308,6 +325,15 @@ suite("Functional Tests", function () {
   });
 
   test("Update multiple fields on an issue: PUT request to `/api/issues/{project}`", function (done) {
+    /* first create an issue with a POST request
+    second retrieve the issue and test:
+      - the issue exists
+    third update the issue by _id and test:
+      - the response returns an object with the prescribed success message
+    finally retrieve the issues and test:
+      - the array includes the issue with the _id
+      - the issue is updated in the prescribed fields
+    */
     const issue = {
       issue_title: "PUT/2",
       issue_text:
@@ -331,6 +357,8 @@ suite("Functional Tests", function () {
                 d.created_by === issue.created_by
             );
 
+            assert.isDefined(existingIssue);
+
             const { _id } = existingIssue;
 
             chai
@@ -352,9 +380,11 @@ suite("Functional Tests", function () {
                   .request(server)
                   .get(`/api/issues/apitest?_id=${_id}`)
                   .end(function (err, res) {
-                    assert.equal(res.status, 200);
-                    assert.isFalse(res.body[0].open);
-                    assert.strictEqual(res.body[0].assigned_to, "replit");
+                    const updatedIssue = res.body[0];
+                    assert.isDefined(updatedIssue);
+                    assert.strictEqual(updatedIssue._id, _id);
+                    assert.isFalse(updatedIssue.open);
+                    assert.strictEqual(updatedIssue.assigned_to, "replit");
 
                     done();
                   });
@@ -364,6 +394,9 @@ suite("Functional Tests", function () {
   });
 
   test("Update an issue with missing `_id`: PUT request to `/api/issues/{project}`", function (done) {
+    /* test:
+      - that the object highlights the prescribed error message
+    */
     chai
       .request(server)
       .put("/api/issues/apitest")
@@ -377,6 +410,13 @@ suite("Functional Tests", function () {
   });
 
   test("Update an issue with no fields to update: PUT request to `/api/issues/{project}`", function (done) {
+    /* first create an issue with a POST request
+    second retrieve the issue
+    third update the issue by _id without fields
+    only afterwards test:
+      - that the object highlights the prescribed error message
+    */
+
     const issue = {
       issue_title: "PUT/3",
       issue_text:
@@ -422,6 +462,10 @@ suite("Functional Tests", function () {
   });
 
   test("Update an issue with an invalid `_id`: PUT request to `/api/issues/{project}`", function (done) {
+    /* first update an issue with a random identifier
+    only afterwards test:
+      - that the object highlights the prescribed error message
+    */
     const _id = Math.random().toString().slice(2);
 
     chai
@@ -440,7 +484,14 @@ suite("Functional Tests", function () {
   });
 
   test("Delete an issue: DELETE request to `/api/issues/{project}`", function (done) {
-    // add an issue to then delete
+    /* first create an issue with a POST request
+    second retrieve the issue and test:
+      - the issue exists
+    third delete the issue by _id and test:
+      - the response returns an object with the prescribed success message
+    finally retrieve the issues and test:
+      - the array no longer includes the issue with the _id
+    */
     const issue = {
       issue_title: "DELETE/1",
       issue_text: "Delete an issue: DELETE request to `/api/issues/{project}`",
@@ -462,6 +513,8 @@ suite("Functional Tests", function () {
                 d.issue_text === issue.issue_text &&
                 d.created_by === issue.created_by
             );
+
+            assert.isDefined(existingIssue);
 
             const { _id } = existingIssue;
 
@@ -493,6 +546,10 @@ suite("Functional Tests", function () {
   });
 
   test("Delete an issue with an invalid `_id`: DELETE request to `/api/issues/{project}`", function (done) {
+    /* first delete an issue with a random identifier
+    only afterwards test:
+      - that the object highlights the prescribed error message
+    */
     const _id = Math.random().toString().slice(2);
 
     chai
@@ -510,6 +567,9 @@ suite("Functional Tests", function () {
   });
 
   test("Delete an issue with missing `_id`: DELETE request to `/api/issues/{project}`", function (done) {
+    /* test:
+      - that the object highlights the prescribed error message
+    */
     chai
       .request(server)
       .delete("/api/issues/apitest")
