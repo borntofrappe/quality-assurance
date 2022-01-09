@@ -4,61 +4,121 @@ const americanToBritishTitles = require("./american-to-british-titles.js");
 const britishOnly = require("./british-only.js");
 
 class Translator {
-  getAmericanTerms(text) {
-    const americanTerms = [];
-
-    Object.entries({
-      ...americanOnly,
-      ...americanToBritishSpelling,
-      ...americanToBritishTitles,
-    }).forEach(([american, british]) => {
-      if (new RegExp(`\\b${american}\\b`).test(text)) {
-        americanTerms.push([american, british]);
-      }
-    });
-
-    const times = text.match(/\d{1,2}:\d{1,2}/g) || [];
-    times.forEach((time) => americanTerms.push([time, time.replace(":", ".")]));
-
-    return americanTerms;
+  constructor() {
+    this.dictionary = {
+      "american-to-british": {
+        keywords: Object.entries({
+          ...americanOnly,
+          ...americanToBritishSpelling,
+        }).sort((a, b) => b[0].length - a[0].length),
+        timeSeparators: [":", "."],
+        titles: Object.entries(americanToBritishTitles).sort(
+          (a, b) => b[0].length - a[0].length
+        ),
+      },
+      "british-to-american": {
+        keywords: Object.entries({
+          ...britishOnly,
+          ...Object.fromEntries(
+            Object.entries(americanToBritishSpelling).map(
+              ([american, british]) => [british, american]
+            )
+          ),
+        }).sort((a, b) => b[0].length - a[0].length),
+        timeSeparators: [".", ":"],
+        titles: Object.entries(americanToBritishTitles)
+          .map(([american, british]) => [british, american])
+          .sort((a, b) => b[0].length - a[0].length),
+      },
+    };
   }
 
-  getBritishTerms(text) {
-    const britishTerms = [];
+  translate(text, locale, highlightTranslation = false) {
+    const dictionary = this.dictionary[locale];
 
-    Object.entries({
-      ...americanOnly,
-      ...americanToBritishSpelling,
-      ...americanToBritishTitles,
-    }).forEach(([american, british]) => {
-      if (new RegExp(`\\b${british}\\b`).test(text)) {
-        britishTerms.push([british, american]);
-      }
-    });
+    const [t1, t2] = dictionary.timeSeparators;
 
-    Object.entries({
-      ...britishOnly,
-    }).forEach(([british, american]) => {
-      if (new RegExp(`\\b${british}\\b`).test(text)) {
-        britishTerms.push([british, american]);
-      }
-    });
+    let translation = text;
 
-    const times = text.match(/\d{1,2}.\d{1,2}/g) || [];
-    times.forEach((time) => britishTerms.push([time, time.replace(".", ":")]));
+    if (highlightTranslation) {
+      dictionary.keywords.forEach(([e1, e2]) => {
+        const uniqueMatches = new Set(
+          translation.match(new RegExp(`\\b${e1}\\b`, "ig")) || []
+        );
+        uniqueMatches.forEach((uniqueMatch) => {
+          const charCode = uniqueMatch.charCodeAt();
+          const uniqueTranslation =
+            charCode >= 65 && charCode <= 90
+              ? `${e2[0].toUpperCase()}${e2.slice(1)}`
+              : e2;
+          translation = translation.replace(
+            new RegExp(`\\b${uniqueMatch}\\b`, "g"),
+            `<span class="highlight">${uniqueTranslation}</span>`
+          );
+        });
+      });
 
-    return britishTerms;
-  }
+      dictionary.titles.forEach(([t1, t2]) => {
+        const uniqueMatches = new Set(
+          translation.match(new RegExp(`\\b${t1} `, "ig")) || []
+        );
+        uniqueMatches.forEach((uniqueMatch) => {
+          const charCode = uniqueMatch.charCodeAt();
+          const uniqueTranslation =
+            charCode >= 65 && charCode <= 90
+              ? `${t2[0].toUpperCase()}${t2.slice(1)} `
+              : `${t2} `;
+          translation = translation.replace(
+            new RegExp(`\\b${uniqueMatch}`, "g"),
+            `<span class="highlight">${uniqueTranslation.slice(0, -1)}</span> `
+          );
+        });
+      });
 
-  translate(text, terms) {
-    let translation;
-
-    terms.forEach(([v1, v2]) => {
-      translation = text.replace(
-        new RegExp(`\\b${v1}\\b`, "g"),
-        `<span class="highlight">${v2}</span>`
+      translation = translation.replace(
+        new RegExp(`\\b(\\d{1,2})\\${t1}(\\d{1,2})\\b`, "g"),
+        `<span class="highlight">$1${t2}$2</span>`
       );
-    });
+    } else {
+      dictionary.keywords.forEach(([k1, k2]) => {
+        const uniqueMatches = new Set(
+          translation.match(new RegExp(`\\b${k1}\\b`, "ig")) || []
+        );
+        uniqueMatches.forEach((uniqueMatch) => {
+          const charCode = uniqueMatch.charCodeAt();
+          const uniqueTranslation =
+            charCode >= 65 && charCode <= 90
+              ? `${k2[0].toUpperCase()}${k2.slice(1)}`
+              : k2;
+          translation = translation.replace(
+            new RegExp(`\\b${uniqueMatch}\\b`, "g"),
+            uniqueTranslation
+          );
+        });
+      });
+
+      dictionary.titles.forEach(([t1, t2]) => {
+        const uniqueMatches = new Set(
+          translation.match(new RegExp(`\\b${t1} `, "ig")) || []
+        );
+        uniqueMatches.forEach((uniqueMatch) => {
+          const charCode = uniqueMatch.charCodeAt();
+          const uniqueTranslation =
+            charCode >= 65 && charCode <= 90
+              ? `${t2[0].toUpperCase()}${t2.slice(1)} `
+              : `${t2} `;
+          translation = translation.replace(
+            new RegExp(`\\b${uniqueMatch}`, "g"),
+            uniqueTranslation
+          );
+        });
+      });
+
+      translation = translation.replace(
+        new RegExp(`\\b(\\d{1,2})\\${t1}(\\d{1,2})\\b`, "g"),
+        `$1${t2}$2`
+      );
+    }
 
     return translation;
   }
