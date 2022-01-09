@@ -3,7 +3,6 @@ const assert = chai.assert;
 
 const Translator = require("../components/translator.js");
 
-// unit tests
 suite("Unit Tests", () => {
   const translator = new Translator();
   test("Translate `Mangoes are my favorite fruit.` to British English", function (done) {
@@ -232,6 +231,58 @@ suite("Unit Tests", () => {
         "british-to-american"
       ),
       "Tea time is usually around 4 or 4:30."
+    );
+
+    done();
+  });
+
+  test("Highlight the translation in `Mangoes are my favorite fruit.`", function (done) {
+    assert.strictEqual(
+      translator.translate(
+        "Mangoes are my favorite fruit.",
+        "american-to-british",
+        true
+      ),
+      'Mangoes are my <span class="highlight">favourite</span> fruit.'
+    );
+
+    done();
+  });
+
+  test("Highlight the translation in `I ate yogurt for breakfast.`", function (done) {
+    assert.strictEqual(
+      translator.translate(
+        "I ate yogurt for breakfast.",
+        "american-to-british",
+        true
+      ),
+      'I ate <span class="highlight">yoghurt</span> for breakfast.'
+    );
+
+    done();
+  });
+
+  test("Highlight the translation in `We watched the footie match for a while.`", function (done) {
+    assert.strictEqual(
+      translator.translate(
+        "We watched the footie match for a while.",
+        "british-to-american",
+        true
+      ),
+      'We watched the <span class="highlight">soccer</span> match for a while.'
+    );
+
+    done();
+  });
+
+  test("Highlight the translation in `Paracetamol takes up to an hour to work.`", function (done) {
+    assert.strictEqual(
+      translator.translate(
+        "Paracetamol takes up to an hour to work.",
+        "british-to-american",
+        true
+      ),
+      '<span class="highlight">Tylenol</span> takes up to an hour to work.'
     );
 
     done();
