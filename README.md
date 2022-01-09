@@ -16,7 +16,7 @@ Notes and solutions to earn the [Quality Assurance](https://www.freecodecamp.org
 }
 ```
 
-```bash
+```text
 Running Tests...
   Unit Tests
     ✓ convertHandler should correctly read a whole number input.
@@ -63,7 +63,7 @@ Running Tests...
 }
 ```
 
-```bash
+```text
 Running Tests...
 
 
@@ -92,6 +92,62 @@ Running Tests...
 ### [Sudoku Solver](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/sudoku-solver)
 
 ### [American British Translator](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/american-british-translator)
+
+```js
+const text =
+  "Loudhailer is sure a funny word in British English. Unfortunately it's lost in translation. Like pritt-stick and ice lolly. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20.18. At least in the UK.";
+const locale = "british-to-american";
+
+const translation =
+  "Megaphone is sure a funny word in British English. Unfortunately it's lost in translation. Like glue stick and popsicle. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20:18. At least in the UK.";
+
+const highlight = `<span class="highlight">Megaphone</span> is sure a funny word in British English. Unfortunately it's lost in translation. Like <span class="highlight">glue stick</span> and <span class="highlight">popsicle</span>. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's <span class="highlight">20:18</span>. At least in the UK.`;
+```
+
+```text
+Running Tests...
+
+
+  Unit Tests
+    Test translation
+      ✓ Translate `Mangoes are my favorite fruit.` to British English (274ms)
+      ✓ Translate `I ate yogurt for breakfast.` to British English
+      ✓ Translate `We had a party at my friend's condo.` to British English
+      ✓ Translate `Can you toss this in the trashcan for me?` to British English
+      ✓ Translate `The parking lot was full.` to British English
+      ✓ Translate `Like a high tech Rube Goldberg machine.` to British English (53ms)
+      ✓ Translate `To play hooky means to skip class or work.` to British English
+      ✓ Translate `No Mr. Bond, I expect you to die.` to British English
+      ✓ Translate `Dr Grosh will see you now.` to British English (80ms)
+      ✓ Translate `Lunch is at 12:15 today.` to British English
+      ✓ Translate `We watched the footie match for a while.` to American English (222ms)
+      ✓ Translate `Paracetamol takes up to an hour to work.` to American English
+      ✓ Translate `First, caramelise the onions.` to American English
+      ✓ Translate `I spent the bank holiday at the funfair.` to American English
+      ✓ Translate `I had a bicky then went to the chippy.` to American English
+      ✓ Translate `I've just got bits and bobs in my bum bag.` to American English
+      ✓ Translate `The car boot sale at Boxted Airfield was called off.` to American English (45ms)
+      ✓ Translate `Have you met Mrs Kalyani?` to American English
+      ✓ Translate `Prof Joyner of King's College, London.` to American English
+      ✓ Translate `Tea time is usually around 4 or 4.30.` to American English
+    Test highlight syntax
+      ✓ Highlight the translation in `Mangoes are my favorite fruit.`
+      ✓ Highlight the translation in `I ate yogurt for breakfast.`
+      ✓ Highlight the translation in `We watched the footie match for a while.`
+      ✓ Highlight the translation in `Paracetamol takes up to an hour to work.`
+
+  Functional Tests
+    Test POST requests
+      ✓ Translation with text and locale fields: POST request `to /api/translate` (75ms)
+      ✓ Translation with text and invalid locale field: POST request `to /api/translate`
+      ✓ Translation with missing text field: POST request `to /api/translate`
+      ✓ Translation with missing locale field: POST request `to /api/translate`
+      ✓ Translation with empty text: POST request `to /api/translate`
+      ✓ Translation with text that needs no translation: POST request `to /api/translate`
+
+
+  30 passing (1s)
+```
 
 ## Courses
 
