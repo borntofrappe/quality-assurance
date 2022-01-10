@@ -33,7 +33,7 @@ class SudokuSolver {
     const v = value.toString();
 
     for (let c = 0; c < 9; c++) {
-      if (puzzleString[row * 9 + c] === v) {
+      if (puzzleString[row * 9 + c] === v && column !== c) {
         return false;
       }
     }
@@ -45,7 +45,7 @@ class SudokuSolver {
     const v = value.toString();
 
     for (let r = 0; r < 9; r++) {
-      if (puzzleString[column + r * 9] === v) {
+      if (puzzleString[column + r * 9] === v && row !== r) {
         return false;
       }
     }
@@ -62,7 +62,11 @@ class SudokuSolver {
 
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        if (puzzleString[s + j + i * 9] === v) {
+        if (
+          puzzleString[s + j + i * 9] === v &&
+          c + j !== column &&
+          r + i !== row
+        ) {
           return false;
         }
       }
