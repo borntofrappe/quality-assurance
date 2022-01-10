@@ -19,3 +19,33 @@ Complete the puzzle logic in `/controllers/sudoku-solver.js`. The class has seve
 - with `solve` solve a valid puzzle string
 
 Refer to `controllers/puzzle-strings.js` for a sample of puzzles the application should be able to handle.
+
+## Routes
+
+In `/routes/api.js` handle two post requests, to `api/solve` and `api/check`.
+
+### solve
+
+The request includes an object with the required `puzzle` field, detailing the input string.
+
+```js
+const req.body = {
+    puzzle: string
+}
+```
+
+With a solution return an object with the completed string.
+
+```js
+const output = {
+  solution: string,
+};
+```
+
+Without the required field return `{ error: 'Required field missing' }`.
+
+With invalid characters return `{ error: 'Invalid characters in puzzle' }`.
+
+When the string has an incorrect length return `{ error: 'Expected puzzle to be 81 characters long' }`.
+
+When the string creates a conflict or the puzzle can't be solved return `{ error: 'Puzzle cannot be solved' }`.

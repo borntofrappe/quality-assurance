@@ -1,10 +1,11 @@
 class SudokuSolver {
   validate(puzzleString) {
-    if (
-      puzzleString.length !== 81 ||
-      new RegExp(/[^1-9\.]/).test(puzzleString)
-    ) {
-      return false;
+    if (puzzleString.length !== 81) {
+      throw new Error("Expected puzzle to be 81 characters long");
+    }
+
+    if (new RegExp(/[^1-9\.]/).test(puzzleString)) {
+      throw new Error("Invalid characters in puzzle");
     }
 
     for (let i = 0; i < puzzleString.length; i++) {
@@ -20,7 +21,7 @@ class SudokuSolver {
           !this.checkColPlacement(pS, row, column, value) ||
           !this.checkRegionPlacement(pS, row, column, value)
         ) {
-          return false;
+          throw new Error("Puzzle cannot be solved");
         }
       }
     }
