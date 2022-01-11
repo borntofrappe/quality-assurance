@@ -8,7 +8,11 @@ module.exports = function (app) {
   app.route("/api/check").post((req, res) => {
     const { puzzle, coordinate, value } = req.body;
 
-    if (!puzzle || !coordinate || !value) {
+    if (
+      puzzle === undefined ||
+      coordinate === undefined ||
+      value === undefined
+    ) {
       return res.json({ error: "Required field(s) missing" });
     }
 
