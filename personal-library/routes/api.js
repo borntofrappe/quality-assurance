@@ -44,6 +44,11 @@ module.exports = function (app) {
     .post(function (req, res) {
       //response will contain new book object including atleast _id and title
       let title = req.body.title;
+
+      if (title === undefined) {
+        return res.send("missing required field title");
+      }
+
       const _id = getRandomId();
 
       let book = {
