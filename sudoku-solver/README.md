@@ -6,7 +6,7 @@ Create an application similar [to the example Metric-Imperial Converter](https:/
 
 - [Assignment](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/sudoku-solver)
 
-- [REPL](https://replit.com/@borntofrappe/boilerplate-project-sudoku-solver)
+- [Solution](https://replit.com/@borntofrappe/boilerplate-project-sudoku-solver)
 
 ## App logic
 
@@ -168,3 +168,54 @@ For `/api/check` test the placement:
 - with an invalid coordinate
 
 - with an invalid value
+
+## Testing errors
+
+In the unit test I first used `assert.throws` to consider the errors returned by the methods.
+
+```js
+assert.throws(
+  () =>
+    solver.validate(
+      "82..4..6...06..89...98315.749.157.............AB..4...96.415..81..7632..3...28.51"
+    ),
+  "Invalid characters in puzzle"
+);
+```
+
+The code works to execute the function, validate the error and the connected error message. However, running the project on freeCodeCamp the method is not picked up by the testing suite. If you'd visit `/_api/get-tests` you'd find an empty `"assertion"` field for the associated test.
+
+```json
+{
+  "state": "passed",
+  "assertions": []
+}
+```
+
+The testing suite considers 12 valid unit tests as tests having at least an assertion, so the check fails.
+
+One way to fix this is to execute the function in a `try..catch` block and check the error message through the `strictEqual` assertion instead.
+
+```js
+try {
+  solver.validate(
+    "82..4..6...06..89...98315.749.157.............AB..4...96.415..81..7632..3...28.51"
+  );
+} catch (error) {
+  assert.strictEqual(error.message, "Invalid characters in puzzle");
+}
+```
+
+`strictEqual` is detected and the final condition is met.
+
+```json
+{
+  "state": "passed",
+  "assertions": [
+    {
+      "method": "strictEqual",
+      "args": ["solver..."]
+    }
+  ]
+}
+```
