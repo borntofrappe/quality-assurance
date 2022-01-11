@@ -6,6 +6,8 @@ Create an application similar [to the example Personal Library](https://personal
 
 - [Assignment](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/personal-library)
 
+- [REPL](https://replit.com/@borntofrappe/boilerplate-project-library)
+
 ## Routes
 
 Create routes within `routes/api.js`.
@@ -108,3 +110,7 @@ Unlike other projects in the curriculum the script already sets up the necessary
 - a DELETE request to `/api/books/:id` with a valid `_id`
 
 - a DELETE request to `/api/books/:id` with an invalid `_id`
+
+## Notes
+
+The application is first developed without a database, with the goal of focusing on the necessary routes and tests. Once both are implemented, the idea is to repurpose the project to benefit from Mongo and Mongoose. <!-- To handle the connection it might be necessary to update `server.js` as well. -->
