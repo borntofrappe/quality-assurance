@@ -64,8 +64,7 @@ class SudokuSolver {
       for (let j = 0; j < 3; j++) {
         if (
           puzzleString[s + j + i * 9] === v &&
-          c + j !== column &&
-          r + i !== row
+          !(column === c + j && row === r + i)
         ) {
           return false;
         }
