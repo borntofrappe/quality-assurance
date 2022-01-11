@@ -59,15 +59,16 @@ module.exports = function (app) {
       return res.json({ error: "Required field missing" });
     }
 
+    let solution;
+
     try {
-      solver.validate(puzzle);
+      solution = solver.solve(puzzle);
     } catch (error) {
       return res.json({
         error: error.message,
       });
     }
 
-    const solution = solver.solve(puzzle);
     return res.json({
       solution,
     });

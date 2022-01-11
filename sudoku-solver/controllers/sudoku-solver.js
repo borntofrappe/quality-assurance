@@ -102,6 +102,12 @@ class SudokuSolver {
   }
 
   solve(puzzleString) {
+    try {
+      this.validate(puzzleString);
+    } catch (error) {
+      throw error;
+    }
+
     this.solution = null;
     return this.recursiveSolve(puzzleString);
   }
