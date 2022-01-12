@@ -205,3 +205,23 @@ try {
 ```
 
 I chose to include two `try` blocks since the assignment asks to send a specific string when both functions raise an error.
+
+## Testing errors
+
+Similarly to the sudoku solver in this repository I ultimately decided to update how errors are validated with `chai`.
+
+Instead of using `assert.throws` executing the function.
+
+```js
+assert.throws(() => convertHandler.getNum("3/2/3"), "invalid number");
+```
+
+Include a `try .. catch` block and test the error message itself.
+
+```js
+try {
+  convertHandler.getNum("3/2/3");
+} catch (error) {
+  assert.strictEqual(error.message, "invalid number");
+}
+```

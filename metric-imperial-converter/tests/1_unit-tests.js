@@ -46,7 +46,15 @@ suite("Unit Tests", function () {
   });
 
   test("convertHandler should correctly return an error on a double-fraction (i.e. 3/2/3).", function (done) {
+    /*
     assert.throws(() => convertHandler.getNum("3/2/3"), "invalid number");
+    */
+
+    try {
+      convertHandler.getNum("3/2/3");
+    } catch (error) {
+      assert.strictEqual(error.message, "invalid number");
+    }
 
     done();
   });
@@ -97,7 +105,15 @@ suite("Unit Tests", function () {
   });
 
   test("convertHandler should correctly return an error for an invalid input unit.", function (done) {
+    /*
     assert.throws(() => convertHandler.getUnit("kigo"), "invalid unit");
+    */
+
+    try {
+      convertHandler.getUnit("kigo");
+    } catch (error) {
+      assert.strictEqual(error.message, "invalid unit");
+    }
 
     done();
   });
