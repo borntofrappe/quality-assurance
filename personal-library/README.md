@@ -6,7 +6,7 @@ Create an application similar [to the example Personal Library](https://personal
 
 - [Assignment](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/personal-library)
 
-- [REPL](https://replit.com/@borntofrappe/boilerplate-project-library)
+- [Solution](https://replit.com/@borntofrappe/boilerplate-project-library)
 
 ## Routes
 
@@ -158,12 +158,151 @@ Running Tests...
 
 ### DB
 
-With a database.
+To work with a database begin by installing the necessary dependencies.
 
-```text
-
+```json
+{
+  "dependencies": {
+    "mongodb": "~3.6.0",
+    "mongoose": "~5.4.0"
+  }
+}
 ```
 
-<!--
-zombie rewrite
- -->
+Add also the string connecting to the database in the `MONGO_URI` variable in the secret `.env` file.
+
+### Server
+
+Since the application relies on a connection to the database the `app.listen` instruction is conditioned to an existing connection.
+
+```js
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }).then(() => {
+  // listen to app
+});
+```
+
+### Mongoose
+
+Instead of operating on the local data structure the project relies on a mongoose schema, a model and documents.
+
+With the schema describe the book object with a `title` and `comments` properties. The `default` field helps to initialize the array with an empty object.
+
+```js
+comments: {
+  type: [String],
+  default: [],
+},
+```
+
+With the model set up the interface for mongoose queries.
+
+```js
+const Book = mongoose.model("Book", bookSchema);
+```
+
+Create a document as an instance of the model.
+
+```js
+const book = new Book({ title });
+```
+
+Save the document with the `.save` method.
+
+```js
+book.save((err, data) => {});
+```
+
+With mongoose queries then set up the different app routes:
+
+- find all books
+
+  ```js
+  Book.find({}, (err, data) => {});
+  ```
+
+- delete all documents
+
+  ```js
+  Book.deleteMany({}, (err) => {});
+  ```
+
+- find a specific book
+
+  ```js
+  Book.findById({}, (err) => {});
+  ```
+
+- delete a specific book
+
+  ```js
+  Book.findByIdAndDelete({}, (err) => {});
+  ```
+
+To add a comment it is possible to implement the feature in at least two ways:
+
+1. find the book, edit the document and save it
+
+2. find the book and update it directly
+
+In the first instance use `findById` and then the `save` method. In the latter use `findByIdAndUpdate`, adding the comment with te `$push` directive.
+
+```js
+{ $push: { comments: comment } },
+```
+
+Be sure to also instruct mongoose to return the updated version of the document.
+
+```js
+{ new: true },
+```
+
+In `api.js` I implemented both solutions and commented out the first approach.
+
+### Tests
+
+A change is necessary in the way the application tests requests with an `id` that does not exist in the database. A purely random string using the previous function raises an error with Mongoose, which means the response object includes this error first.
+
+```js
+if (err) {
+  return res.json({ err });
+}
+```
+
+Use a valid `id` as picked from mongoose itself. The arbitrary string is copied from a book which I created and then deleted.
+
+```js
+const id = "61dea3f87163b34ffcb9287b";
+```
+
+### Result
+
+The project passes the tests set up by freeCodeCamp and produces the following in the online REPL.
+
+```text
+Your app is listening on port 3000
+Running Tests...
+
+
+  Functional Tests
+    ✓ #example Test GET /api/books (179ms)
+    Routing tests
+      POST /api/books with title => create book object/expect book object
+        ✓ Test POST /api/books with title (197ms)
+        ✓ Test POST /api/books with no title given
+      GET /api/books => array of books
+        ✓ Test GET /api/books (162ms)
+      GET /api/books/[id] => book object with [id]
+        ✓ Test GET /api/books/[id] with id not in db (150ms)
+        ✓ Test GET /api/books/[id] with valid id in db (300ms)
+      POST /api/books/[id] => add comment/expect book object with id
+(node:1407) DeprecationWarning: collection.findAndModify is deprecated. Use findOneAndUpdate, findOneAndReplace or findOneAndDelete instead.
+        ✓ Test POST /api/books/[id] with comment (312ms)
+        ✓ Test POST /api/books/[id] without comment field (159ms)
+        ✓ Test POST /api/books/[id] with comment, id not in db (146ms)
+      DELETE /api/books/[id] => delete book object id
+        ✓ Test DELETE /api/books/[id] with valid id in db (464ms)
+        ✓ Test DELETE /api/books/[id] with  id not in db (158ms)
+
+
+  11 passing (2s)
+```

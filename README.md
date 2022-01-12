@@ -89,6 +89,35 @@ Running Tests...
 
 ### [Personal Library](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/personal-library)
 
+```text
+Your app is listening on port 3000
+Running Tests...
+
+
+  Functional Tests
+    ✓ #example Test GET /api/books (179ms)
+    Routing tests
+      POST /api/books with title => create book object/expect book object
+        ✓ Test POST /api/books with title (197ms)
+        ✓ Test POST /api/books with no title given
+      GET /api/books => array of books
+        ✓ Test GET /api/books (162ms)
+      GET /api/books/[id] => book object with [id]
+        ✓ Test GET /api/books/[id] with id not in db (150ms)
+        ✓ Test GET /api/books/[id] with valid id in db (300ms)
+      POST /api/books/[id] => add comment/expect book object with id
+(node:1407) DeprecationWarning: collection.findAndModify is deprecated. Use findOneAndUpdate, findOneAndReplace or findOneAndDelete instead.
+        ✓ Test POST /api/books/[id] with comment (312ms)
+        ✓ Test POST /api/books/[id] without comment field (159ms)
+        ✓ Test POST /api/books/[id] with comment, id not in db (146ms)
+      DELETE /api/books/[id] => delete book object id
+        ✓ Test DELETE /api/books/[id] with valid id in db (464ms)
+        ✓ Test DELETE /api/books/[id] with  id not in db (158ms)
+
+
+  11 passing (2s)
+```
+
 ### [Sudoku Solver](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/sudoku-solver)
 
 ```json
