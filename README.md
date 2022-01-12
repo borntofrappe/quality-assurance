@@ -4,6 +4,12 @@ Notes and solutions to earn the [Quality Assurance](https://www.freecodecamp.org
 
 ## Projects
 
+_Please note:_ to run the tests in the different projects it is necessary to include a `NODE_ENV` property in a `.env○ file.
+
+```.env
+NODE_ENV=test
+```
+
 ### [Metric-Imperial Converter](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/metric-imperial-converter)
 
 ```text

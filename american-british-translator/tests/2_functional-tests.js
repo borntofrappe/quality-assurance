@@ -32,9 +32,9 @@ suite("Functional Tests", () => {
             text,
             translation,
           });
-        });
 
-      done();
+          done();
+        });
     });
 
     test("Translation with text and invalid locale field: POST request `to /api/translate`", function (done) {
@@ -54,9 +54,9 @@ suite("Functional Tests", () => {
         .end((_, res) => {
           assert.strictEqual(res.status, 200);
           assert.deepEqual(res.body, { error });
-        });
 
-      done();
+          done();
+        });
     });
 
     test("Translation with missing text field: POST request `to /api/translate`", function (done) {
@@ -74,9 +74,9 @@ suite("Functional Tests", () => {
         .end((_, res) => {
           assert.strictEqual(res.status, 200);
           assert.deepEqual(res.body, { error });
-        });
 
-      done();
+          done();
+        });
     });
 
     test("Translation with missing locale field: POST request `to /api/translate`", function (done) {
@@ -94,9 +94,9 @@ suite("Functional Tests", () => {
           assert.strictEqual(res.status, 200);
 
           assert.deepEqual(res.body, { error });
-        });
 
-      done();
+          done();
+        });
     });
 
     test("Translation with empty text: POST request `to /api/translate`", function (done) {
@@ -116,9 +116,9 @@ suite("Functional Tests", () => {
           assert.strictEqual(res.status, 200);
 
           assert.deepEqual(res.body, { error });
-        });
 
-      done();
+          done();
+        });
     });
 
     test("Translation with text that needs no translation: POST request `to /api/translate`", function (done) {
@@ -142,9 +142,9 @@ suite("Functional Tests", () => {
             text,
             translation,
           });
-        });
 
-      done();
+          done();
+        });
     });
   });
 });
