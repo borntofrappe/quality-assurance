@@ -6,16 +6,6 @@ Notes and solutions to earn the [Quality Assurance](https://www.freecodecamp.org
 
 ### [Metric-Imperial Converter](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/metric-imperial-converter)
 
-```json
-{
-  "initNum": 1,
-  "initUnit": "gal",
-  "returnNum": 3.78541,
-  "returnUnit": "L",
-  "string": "1 gallons converts to 3.78541 liters"
-}
-```
-
 ```text
 Running Tests...
   Unit Tests
@@ -48,20 +38,6 @@ Running Tests...
 ```
 
 ### [Issue Tracker](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/issue-tracker)
-
-```json
-{
-  "assigned_to": "borntofrappe",
-  "status_text": "in progress",
-  "open": true,
-  "_id": "7850679728413206",
-  "issue_title": "App routes",
-  "issue_text": "Handle app routes in routes/api.js",
-  "created_by": "borntofrappe",
-  "created_on": "2022-01-07T14:52:47.336Z",
-  "updated_on": "2022-01-07T14:52:47.336Z"
-}
-```
 
 ```text
 Running Tests...
@@ -120,12 +96,6 @@ Running Tests...
 
 ### [Sudoku Solver](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/sudoku-solver)
 
-```json
-{
-  "solution": "827549163531672894649831527496157382218396475753284916962415738185763249374928651"
-}
-```
-
 ```text
 Running Tests...
 
@@ -167,17 +137,6 @@ Running Tests...
 ```
 
 ### [American British Translator](https://www.freecodecamp.org/learn/quality-assurance/quality-assurance-projects/american-british-translator)
-
-```js
-const text =
-  "Loudhailer is sure a funny word in British English. Unfortunately it's lost in translation. Like pritt-stick and ice lolly. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20.18. At least in the UK.";
-const locale = "british-to-american";
-
-const translation =
-  "Megaphone is sure a funny word in British English. Unfortunately it's lost in translation. Like glue stick and popsicle. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20:18. At least in the UK.";
-
-const highlight = `<span class="highlight">Megaphone</span> is sure a funny word in British English. Unfortunately it's lost in translation. Like <span class="highlight">glue stick</span> and <span class="highlight">popsicle</span>. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's <span class="highlight">20:18</span>. At least in the UK.`;
-```
 
 ```text
 Running Tests...
@@ -236,178 +195,214 @@ The goal is to confirm that a program behaves as intended. Chai works as a libra
 const chai = require("chai");
 ```
 
-Assertions work to consider the value of an input variable.
+#### Testing
+
+Each test is described in a _suite_ and with the following structure.
+
+```js
+suite('Message introducing the testing suite', function () {
+  test("Message introducing the test", function (done) {
+    assert.METHOD(ASSERTION, "Message show when the assertion fails")
+    // ...
+
+    done()
+  }
+}
+```
+
+The strings passed as first argument to the `suite` and `test` functions are displayed in the console to contextualize the test. You validate the code in the body of the test and terminate the test executing the `done` function.
+
+For instance and with a first assertion.
 
 ```js
 const assert = chai.assert;
-assert.method(input, errorMessage);
+assert.isNull(null, "null is null");
 ```
 
-- `assert.isNull` and `assert.isNotNull` to test if the input value is null and not null respectively
+If the test fails `chai` displays the error message passed as the last argument to further detail which check has failed.
 
-  ```js
-  assert.isNull(null, "Error description displayed if the test fails");
-  assert.isNotNull(1, "1 is not null");
-  ```
+#### null
 
-  Already running the project in the REPL shows the consequence of the assertion.
+Use `assert.isNull` and `assert.isNotNull` to test if the input value is null and not null respectively.
 
-  ```bash
-  Running Tests...
-    Unit Tests
-      Basic Assertions
-        ✔ #isNull, #isNotNull
-        1) #isDefined, #isUndefined
-        2) #isOk, #isNotOk
-        3) #isTrue, #isNotTrue
+```js
+assert.isNull(null, "null is null");
+assert.isNotNull(1, "1 is not null");
+```
 
-  # ...
-  1 passing (157ms)
-  24 failing
-  ```
+Already running the project in the REPL shows the consequence of the assertion.
 
-- `isDefined` and `isUndefined` to consider if a variable or a function is defined and undefined
+```bash
+Running Tests...
+  Unit Tests
+    Basic Assertions
+      ✔ #isNull, #isNotNull
+      1) #isDefined, #isUndefined
+      2) #isOk, #isNotOk
+      3) #isTrue, #isNotTrue
 
-  ```js
-  assert.isDefined(null, "null is not undefined");
-  assert.isUndefined(undefined, "undefined IS undefined");
-  ```
+# ...
+1 passing (157ms)
+24 failing
+```
 
-  `null` is **not** undefined.
+#### defined
 
-- `isOk` and `isNotOk` to test truthy and falsy values
+Use `isDefined` and `isUndefined` to consider if a variable or a function is defined and undefined.
 
-  ```js
-  assert.isNotOk(null, "null is falsey");
-  assert.isOk("I'm truthy", "A string is truthy");
-  assert.isOk(true, "true is truthy");
-  ```
+```js
+assert.isDefined(null, "null is not undefined");
+assert.isUndefined(undefined, "undefined IS undefined");
+```
 
-  In JavaScript there are only a few falsy values: `false`, `0`, `-0` and `0n` (zeros including BigInt zero), `""`, `''` and ``(empty strings), `null`, `undefined` and`NaN`. Everything else is truthy
+`null` is **not** undefined.
 
-- `isTrue` and `isNotTrue` to test `true` and not `true` values; `isFalse` and `isNotFalse` to test the opposing boolean `false`
+#### Truthy and falsy
 
-  ```js
-  assert.isTrue(true, "true is true");
-  assert.isTrue(
-    !!"double negation",
-    "Double negation of a truthy value is true"
-  );
-  assert.isNotTrue(
-    { value: "truthy" },
-    "Objects are truthy, but are not boolean values"
-  );
-  ```
+Use `isOk` and `isNotOk` to test truthy and falsy values
 
-  The assertion only checks the two boolean values
+```js
+assert.isNotOk(null, "null is falsey");
+assert.isOk("I'm truthy", "A string is truthy");
+assert.isOk(true, "true is truthy");
+```
 
-- `equal` and `notEqual` to compare objects with two equal signs `==`.
+In JavaScript there are only a few falsy values: `false`, `0`, `-0` and `0n` (zeros including BigInt zero), `""`, `''` and ``(empty strings), `null`, `undefined` and`NaN`. Everything else is truthy.
 
-  The functions receive two arguments compared with the specified operator
+#### boolean
 
-  ```js
-  assert.equal(a, b, [message]);
-  ```
+Use `isTrue` and `isNotTrue` to test `true` and not `true` values; use `isFalse` and `isNotFalse` to test the opposing boolean value.
 
-  ```js
-  assert.equal(12, "12", "Numbers are coerced into strings with ==");
-  assert.notEqual({ value: 1 }, { value: 1 }, "== compares object references");
-  assert.equal(6 * "2", "12");
-  assert.notEqual(6 + "2", "12");
-  ```
+```js
+assert.isTrue(true, "true is true");
+assert.isTrue(!!"double negation", "Double negation of a truthy value is true");
+assert.isNotTrue(
+  { value: "truthy" },
+  "Objects are truthy, but are not boolean values"
+);
+```
 
-  Objects are compared by reference.
+The assertion only checks the two boolean values.
 
-  With `6 * '2'` JavaScript coerces the `'2'` to a number in order to compute the arithmetic operation.
+#### Loose equality
 
-  With `6 + '2'` it is the number which is coerced to a string and the two halves are concatenated.
+Use `equal` and `notEqual` to compare objects with two equal signs `==`.
 
-- `strictEqual`, `notStrictEqual` to compare objects with three equal signs `===`
+```js
+assert.equal(a, b, [message]);
+```
 
-  ```js
-  assert.notStrictEqual(6, "6");
-  assert.strictEqual(6, 3 * 2);
-  assert.strictEqual(6 * "2", 12);
-  assert.notStrictEqual([1, "a", {}], [1, "a", {}]);
-  ```
+```js
+assert.equal(12, "12", "Numbers are coerced into strings with ==");
+assert.notEqual({ value: 1 }, { value: 1 }, "== compares object references");
+assert.equal(6 * "2", "12");
+assert.notEqual(6 + "2", "12");
+```
 
-- `deepEqual`, `notDeepEqual` to consider if two objects are deep equal, contain the same values
+Objects are compared by reference:
 
-  ```js
-  assert.deepEqual(
-    { a: "1", b: 5 },
-    { b: 5, a: "1" },
-    "The order of keys doesn't matter"
-  );
-  assert.notDeepEqual(
-    { a: [5, 6] },
-    { a: [6, 5] },
-    "The order of array elements does matter"
-  );
-  ```
+- with `6 * '2'` JavaScript coerces the `'2'` to a number in order to compute the arithmetic operation
 
-  Order matters in the items of the arrays, not in the keys of objects.
+- with `6 + '2'` it is the number which is coerced to a string and the two halves are concatenated
 
-- `isAbove`, `isAtMost` to compare two elements with the comparison operators `>` and `<=`
+#### Strict equality
 
-  ```js
-  assert.isAtMost("hello".length, 5);
-  assert.isAbove(1, 0);
-  assert.isAbove(Math.PI, 3);
-  assert.isAtMost(1 - Math.random(), 1);
-  ```
+Use `strictEqual`, `notStrictEqual` to compare objects with three equal signs `===`.
 
-- `isBelow`, `isAtLeast` to compare two elements with `<` and `>=`
+```js
+assert.notStrictEqual(6, "6");
+assert.strictEqual(6, 3 * 2);
+assert.strictEqual(6 * "2", 12);
+assert.notStrictEqual([1, "a", {}], [1, "a", {}]);
+```
 
-  ```js
-  assert.isAtLeast("world".length, 5);
-  assert.isAtLeast(2 * Math.random(), 0);
-  assert.isBelow(5 % 2, 2);
-  assert.isBelow(2 / 3, 1);
-  ```
+#### Deep equality
 
-- `approximately` to test if a value falls in a given range
+Use `deepEqual`, `notDeepEqual` to consider if two objects are deep equal, contain the same values.
 
-  ```js
-  assert.approximately(value, expected, delta, [message]);
-  ```
+```js
+assert.deepEqual(
+  { a: "1", b: 5 },
+  { b: 5, a: "1" },
+  "The order of keys doesn't matter"
+);
+assert.notDeepEqual(
+  { a: [5, 6] },
+  { a: [6, 5] },
+  "The order of array elements does matter"
+);
+```
 
-  ```js
-  function weirdNumbers(delta) {
-    return 1 + delta - Math.random();
-  }
+Order matters in the items of the arrays, not in the keys of objects.
 
-  assert.approximately(weirdNumbers(0.5), 1, 0.5);
-  assert.approximately(weirdNumbers(0.2), 1, 0.8);
-  ```
+#### Inequality
 
-  `weirdNumbers` returns the input number plus a value in the `[0, 1)` range, meaning `[0.5, 1.5)` in the first instance, `[0.2, 1.2)` in the second.
+Use `isAbove`, `isAtMost` to compare two elements with the greater than sign `>` and with the smaller than or equal two sign `<=`.
 
-- `isArray`, `isNotArray` to test if the variable refers to an array
+```js
+assert.isAtMost("hello".length, 5);
+assert.isAbove(1, 0);
+assert.isAbove(Math.PI, 3);
+assert.isAtMost(1 - Math.random(), 1);
+```
 
-  ```js
-  assert.isArray(
-    "isThisAnArray?".split(""),
-    "String.prototype.split() returns an array"
-  );
-  assert.isNotArray([1, 2, 3].indexOf(2), "indexOf returns a number");
-  ```
+Use `isBelow`, `isAtLeast` to compare two elements with the smaller than sign `<` and with the greater than or equal to sign `>=`.
 
-- `include`, `notInclude` to test if an array contains a value
+```js
+assert.isAtLeast("world".length, 5);
+assert.isAtLeast(2 * Math.random(), 0);
+assert.isBelow(5 % 2, 2);
+assert.isBelow(2 / 3, 1);
+```
 
-  ```js
-  assert.include(array, item, [message]);
-  ```
+#### Approximately
 
-  ```js
-  const winterMonths = ["dec,", "jan", "feb", "mar"];
-  const backendLanguages = ["php", "python", "javascript", "ruby", "asp"];
+Use `approximately` to test if a value falls in a given range.
 
-  assert.notInclude(winterMonths, "jul", "It's summer in july...");
-  assert.include(backendLanguages, "javascript", "JS is a backend language");
-  ```
+```js
+assert.approximately(value, expected, delta, [message]);
+```
 
-- isString`, `isNotString` to test if the input is a string
+```js
+function weirdNumbers(delta) {
+  return 1 + delta - Math.random();
+}
+
+assert.approximately(weirdNumbers(0.5), 1, 0.5);
+assert.approximately(weirdNumbers(0.2), 1, 0.8);
+```
+
+In the snippet `weirdNumbers` returns the input number plus a value in the `[0, 1)` range, meaning `[0.5, 1.5)` in the first instance, `[0.2, 1.2)` in the second.
+
+#### Array
+
+Use `isArray`, `isNotArray` to test if the variable refers to an array.
+
+```js
+assert.isArray(
+  "isThisAnArray?".split(""),
+  "String.prototype.split() returns an array"
+);
+assert.isNotArray([1, 2, 3].indexOf(2), "indexOf returns a number");
+```
+
+Use `include`, `notInclude` to test if an array contains a specific item.
+
+```js
+assert.include(array, item, [message]);
+```
+
+```js
+const winterMonths = ["dec,", "jan", "feb", "mar"];
+const backendLanguages = ["php", "python", "javascript", "ruby", "asp"];
+
+assert.notInclude(winterMonths, "jul", "It's summer in july...");
+assert.include(backendLanguages, "javascript", "JS is a backend language");
+```
+
+#### String
+
+- Use isString`, `isNotString` to test if the input is a string.
 
   ```js
   assert.isNotString(Math.sin(Math.PI / 4), "A float is not a string");
@@ -418,88 +413,96 @@ assert.method(input, errorMessage);
   assert.isString(JSON.stringify({ type: "object" }), "JSON is a string");
   ```
 
-- `include`, `notInclude` to test if a string contains a sequence of characters
+Use `include`, `notInclude` to test if a string contains a sequence of characters.
 
-  ```js
-  assert.include(string, charsequence, [message]);
-  ```
+```js
+assert.include(string, charsequence, [message]);
+```
 
-  ```js
-  assert.include("Arrow", "row", "'Arrow' contains 'row'");
-  assert.notInclude("dart", "queue", "But 'dart' doesn't contain 'queue'");
-  ```
+```js
+assert.include("Arrow", "row", "'Arrow' contains 'row'");
+assert.notInclude("dart", "queue", "But 'dart' doesn't contain 'queue'");
+```
 
-- `match`, `notMatch` to compare strings against a regular expression
+Use `match`, `notMatch` to compare strings against a regular expression.
 
-  ```js
-  assert.match(string, regex, [message]);
-  ```
+```js
+assert.match(string, regex, [message]);
+```
 
-  ```js
-  const formatPeople = function (name, age) {
-    return "# name: " + name + ", age: " + age + "\n";
-  };
+```js
+const formatPeople = function (name, age) {
+  return "# name: " + name + ", age: " + age + "\n";
+};
 
-  const regex = /^#\sname\:\s[\w\s]+,\sage\:\s\d+\s?$/;
+const regex = /^#\sname\:\s[\w\s]+,\sage\:\s\d+\s?$/;
 
-  assert.match(formatPeople("John Doe", 35), regex);
-  assert.notMatch(formatPeople("Paul Smith III", "twenty-four"), regex);
-  ```
+assert.match(formatPeople("John Doe", 35), regex);
+assert.notMatch(formatPeople("Paul Smith III", "twenty-four"), regex);
+```
 
-- `property`, `notProperty` to check if an object has a certain property
+#### Object
 
-  ```js
-  assert.property(object, property, [message]);
-  ```
+Use `property`, `notProperty` to check if an object has a certain property.
 
-  ```js
-  const Car = function () {
-    this.model = "sedan";
-    this.engines = 1;
-    this.wheels = 4;
-  };
+```js
+assert.property(object, property, [message]);
+```
 
-  const Plane = function () {
-    this.model = "737";
-    this.engines = ["left", "right"];
-    this.wheels = 6;
-    this.wings = 2;
-  };
+```js
+const Car = function () {
+  this.model = "sedan";
+  this.engines = 1;
+  this.wheels = 4;
+};
 
-  const myCar = new Car();
-  const airlinePlane = new Plane();
-  ```
+const Plane = function () {
+  this.model = "737";
+  this.engines = ["left", "right"];
+  this.wheels = 6;
+  this.wings = 2;
+};
 
-- `typeOf`, `notTypeOf` to consider the type of the variable
+const myCar = new Car();
+const airlinePlane = new Plane();
+```
 
-  ```js
-  assert.typeOf(object, type, [message]);
-  ```
+#### Type
 
-  Include the type as a string since chai uses the `toString` method to retrieve the value.
+Use `typeOf`, `notTypeOf` to consider the type of the variable
 
-  ```js
-  assert.typeOf(myCar, "object");
-  assert.typeOf(myCar.model, "string");
-  assert.notTypeOf(airlinePlane.wings, "string");
-  assert.typeOf(airlinePlane.engines, "array");
-  assert.typeOf(myCar.wheels, "number");
-  ```
+```js
+assert.typeOf(object, type, [message]);
+```
 
-- `instanceOf`, `notInstanceOf` to consider if an object is an instance of a constructor
+Include the type as a string since chai uses the `toString` method to retrieve the value.
 
-  ```js
-  assert.instanceOf(object, constructor);
-  ```
+```js
+assert.typeOf(myCar, "object");
+assert.typeOf(myCar.model, "string");
+assert.notTypeOf(airlinePlane.wings, "string");
+assert.typeOf(airlinePlane.engines, "array");
+assert.typeOf(myCar.wheels, "number");
+```
 
-  ```js
-  assert.notInstanceOf(myCar, Plane);
-  assert.instanceOf(airlinePlane, Plane);
-  assert.instanceOf(airlinePlane, Object);
-  assert.notInstanceOf(myCar.wheels, String);
-  ```
+#### Instance
 
-`chai-http` allows to test asynchornous operations. Consider a server equipped to respond to a GET request to a specific endpoint and with specific query parameters with a string
+Use `instanceOf`, `notInstanceOf` to consider if an object is an instance of a constructor.
+
+```js
+assert.instanceOf(object, constructor);
+```
+
+```js
+assert.notInstanceOf(myCar, Plane);
+assert.instanceOf(airlinePlane, Plane);
+assert.instanceOf(airlinePlane, Object);
+assert.notInstanceOf(myCar.wheels, String);
+```
+
+#### http
+
+`chai-http` allows to test asynchornous operations. Consider a server equipped to respond to a GET request with specific query parameters.
 
 ```text
 request:  GET /hello?name=name
@@ -509,52 +512,36 @@ response: 'hello [name]'
 With this setup the module is able to assert the response as follows.
 
 ```js
-suite('GET /hello?name=[name] => "hello [name]"', function () {
-  test("?name=John", function (done) {
-    chai
-      .request(server)
-      .get("/hello?name=John")
-      .end(function (err, res) {
-        assert.equal(res.status, 200, "Response status should be 200");
-        assert.equal(res.text, "hello John", 'Response should be "hello John"');
-        done();
-      });
+chai
+  .request(server)
+  .get("/hello?name=John")
+  .end(function (err, res) {
+    assert.equal(res.status, 200, "Response status should be 200");
+    assert.equal(res.text, "hello John", 'Response should be "hello John"');
+    done();
   });
-});
 ```
-
-The strings passed as first argument to the `suite` and `test` functions are displayed in the console to contextualize the test. The function responsible for the testing is `chai.request`.
-
-`done` is used to signal the end of the asynchronous function.
 
 `server` refers to the instance of the express app. In the REPL the value is exported from `server.js`.
 
-```js
-.get('/hello?name=Guest')
-.end(function (err, res) {
-  assert.equal(res.status, 200);
-  assert.equal(res.text, 'hello Guest');
-  done();
-});
-```
+The module supports several methods throw dedicated functions, like `get`, `post`, `put` and `delete`.
 
-To test a PUT request the module offers the `put` and `send` methods. `send` is used to send the payload to the request.
+To send data in the request the module provides the `send` methods. .
 
 ```js
 .put('/users')
-.send({
-  "name": "Titmothy"
-})
+.send(PAYLOAD)
 ```
 
-Chain the `end` method to then consider the request.
+To evaluate the response the `end` function terminates the asynchronous process with a callback function.
 
 ```js
 .end(function(err, res) {
-  assert.equal(res.status, 200);
   // ...
 })
 ```
+
+The assertions are carried out on the response object or the error if need be.
 
 ```js
 .put('/travellers')
@@ -570,16 +557,20 @@ Chain the `end` method to then consider the request.
 });
 ```
 
-A headless browser like `zombie` allows to visit web pages similar to actual users, and through the testing library allows to test HTML, CSS and JavaScript rendered.
+#### zombie
 
-It is possible to run code before running a test, or at the end of a test, to ensure that the test proceed with a certain setup, but it is first necessary to instruct the `zombie` library with the site to-be-visited.
+`zombie` is a headless browser, a browser without an interface which allows to visit web pages similar to actual users. Together with `chai` the module allows to validate existing content, for instance the HTML elements rendered on the page.
+
+The module is particularly suited to execute code outside of a test, before or after the validation, to ensure the appropriate setup. As a for instance `chai` might need to test that submitting a form modifies the rendered markup. Use `zombie` to visit the page, populate the form and submit its value.
+
+Instruct which page to visit through the `site` property.
 
 ```js
 const Browser = require("zombie");
 Browser.site = "https://boilerplate-mochachai.borntofrappe.repl.co";
 ```
 
-With the information create an instance of the browser.
+Create an instance of the browser.
 
 ```js
 const browser = new Browser();
@@ -595,8 +586,6 @@ suiteSetup(function (done) {
 
 The setup allows later `suite` functions to assert values based on the visited page, the root level of the specified site.
 
-To interact with a form the `zombie` package provides the `fill` and `pressButton` function, populating the input element by name and then submitting the value through the matching button.
-
 ```js
 test('Submit the name "Polo" in the HTML form', function (done) {
   browser.fill("surname", "Polo").then(() => {
@@ -610,7 +599,7 @@ test('Submit the name "Polo" in the HTML form', function (done) {
 });
 ```
 
-`browser.fill` works as a promise which is resolved when the form is submitted. Chaining the `.then` function allows to then refer to the button in sequence. `pressButton` accepts as a second argument a callback function to validate the instance of the browser. In the snippet the assertions ensure that the page is populated with the information provided through the makeshift request.
+`browser.fill` works as a promise which is resolved when the form is submitted. Chaining the `.then` function allows to then refer to the button in sequence. `pressButton` accepts as a second argument a callback function to validate the instance of the browser.
 
 ```js
 browser.fill("surname", "Colombo").then(() => {
