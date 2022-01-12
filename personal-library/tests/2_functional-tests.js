@@ -61,7 +61,6 @@ suite("Functional Tests", function () {
               title,
             })
             .end((_, res) => {
-              console.log(res);
               assert.isObject(res.body);
               assert.hasAllKeys(res.body, ["title", "_id"]);
               assert.strictEqual(res.body.title, title);
@@ -99,7 +98,8 @@ suite("Functional Tests", function () {
 
     suite("GET /api/books/[id] => book object with [id]", function () {
       test("Test GET /api/books/[id] with id not in db", function (done) {
-        const id = Math.random().toString().slice(2);
+        // const id = Math.random().toString().slice(2);
+        const id = "61dea3f87163b34ffcb9287b";
 
         chai
           .request(server)
@@ -203,7 +203,8 @@ suite("Functional Tests", function () {
         });
 
         test("Test POST /api/books/[id] with comment, id not in db", function (done) {
-          const id = Math.random().toString().slice(2);
+          // const id = Math.random().toString().slice(2);
+          const id = "61dea3f87163b34ffcb9287b";
           const comment = "An enticing story.";
           chai
             .request(server)
@@ -252,7 +253,9 @@ suite("Functional Tests", function () {
       });
 
       test("Test DELETE /api/books/[id] with  id not in db", function (done) {
-        const id = Math.random().toString().slice(2);
+        // const id = Math.random().toString().slice(2);
+        const id = "61dea3f87163b34ffcb9287b";
+
         chai
           .request(server)
           .delete(`/api/books/${id}`)

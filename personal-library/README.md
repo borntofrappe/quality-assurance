@@ -113,4 +113,57 @@ Unlike other projects in the curriculum the script already sets up the necessary
 
 ## Notes
 
-The application is first developed without a database, with the goal of focusing on the necessary routes and tests. Once both are implemented, the idea is to repurpose the project to benefit from Mongo and Mongoose. <!-- To handle the connection it might be necessary to update `server.js` as well. -->
+The application is first developed without a database, with the goal of focusing on the necessary routes and tests. Once both are implemented, the idea is to repurpose the project to rely from Mongo and Mongoose.
+
+### NoDB
+
+Without a database the application works with a local data structure, prepopulated with a few random books. `getRandomId` is defined as a utility function to create the `_id` value normally set up by Mongoose.
+
+```js
+function getRandomId() {
+  return Math.random().toString().slice(2);
+}
+```
+
+With the data structure creating a book is a matter of adding an item to the array, deleting a book is a matter of removing the item at the precised index.
+
+The working application passes all the tests set up by freeCodeCamp, producing the following result in the online REPL.
+
+```text
+Running Tests...
+
+
+  Functional Tests
+    ✓ #example Test GET /api/books (74ms)
+    Routing tests
+      POST /api/books with title => create book object/expect book object
+        ✓ Test POST /api/books with title
+        ✓ Test POST /api/books with no title given
+      GET /api/books => array of books
+        ✓ Test GET /api/books
+      GET /api/books/[id] => book object with [id]
+        ✓ Test GET /api/books/[id] with id not in db (90ms)
+        ✓ Test GET /api/books/[id] with valid id in db
+      POST /api/books/[id] => add comment/expect book object with id
+        ✓ Test POST /api/books/[id] with comment
+        ✓ Test POST /api/books/[id] without comment field
+        ✓ Test POST /api/books/[id] with comment, id not in db
+      DELETE /api/books/[id] => delete book object id
+        ✓ Test DELETE /api/books/[id] with valid id in db (53ms)
+        ✓ Test DELETE /api/books/[id] with  id not in db
+
+
+  11 passing (373ms)
+```
+
+### DB
+
+With a database.
+
+```text
+
+```
+
+<!--
+zombie rewrite
+ -->
