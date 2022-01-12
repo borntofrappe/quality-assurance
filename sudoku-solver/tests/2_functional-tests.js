@@ -18,7 +18,8 @@ suite("Functional Tests", () => {
         .end((_, res) => {
           assert.strictEqual(
             res.body.solution,
-            "827549163531672894649831527496157382218396475753284916962415738185763249374928651"
+            "827549163531672894649831527496157382218396475753284916962415738185763249374928651",
+            "response should be 827549163531672894649831527496157382218396475753284916962415738185763249374928651"
           );
           done();
         });
@@ -30,7 +31,11 @@ suite("Functional Tests", () => {
         .post("/api/solve")
         .send({})
         .end((_, res) => {
-          assert.deepEqual(res.body, { error: "Required field missing" });
+          assert.deepEqual(
+            res.body,
+            { error: "Required field missing" },
+            'response should include { error: "Required field missing" }'
+          );
           done();
         });
     });
@@ -44,7 +49,11 @@ suite("Functional Tests", () => {
             "82..4..6...06..89...98315.749.157.............AB..4...96.415..81..7632..3...28.51",
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, { error: "Invalid characters in puzzle" });
+          assert.deepEqual(
+            res.body,
+            { error: "Invalid characters in puzzle" },
+            'response should include { error: "Invalid characters in puzzle" }'
+          );
           done();
         });
     });
@@ -57,9 +66,13 @@ suite("Functional Tests", () => {
           puzzle: "82..4..6...16..89...98315.749.157.............53..4...",
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, {
-            error: "Expected puzzle to be 81 characters long",
-          });
+          assert.deepEqual(
+            res.body,
+            {
+              error: "Expected puzzle to be 81 characters long",
+            },
+            'response should include { error: "Expected puzzle to be 81 characters long" }'
+          );
           done();
         });
     });
@@ -73,9 +86,13 @@ suite("Functional Tests", () => {
             "8.839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1",
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, {
-            error: "Puzzle cannot be solved",
-          });
+          assert.deepEqual(
+            res.body,
+            {
+              error: "Puzzle cannot be solved",
+            },
+            'response should include { error: "Puzzle cannot be solved" }'
+          );
           done();
         });
     });
@@ -93,8 +110,8 @@ suite("Functional Tests", () => {
           value: 5,
         })
         .end((_, res) => {
-          assert.isObject(res.body);
-          assert.property(res.body, "valid");
+          assert.isObject(res.body, "response should be an object");
+          assert.property(res.body, "valid", "response should include valid");
           done();
         });
     });
@@ -110,12 +127,20 @@ suite("Functional Tests", () => {
           value: 8,
         })
         .end((_, res) => {
-          assert.isObject(res.body);
-          assert.property(res.body, "valid");
-          assert.isFalse(res.body.valid);
-          assert.property(res.body, "conflict");
-          assert.isArray(res.body.conflict);
-          assert.strictEqual(res.body.conflict.length, 1);
+          assert.isObject(res.body, "response should be an object");
+          assert.property(res.body, "valid", "response should include valid");
+          assert.isFalse(res.body.valid, "valid should be false");
+          assert.property(
+            res.body,
+            "conflict",
+            "response should include conflict"
+          );
+          assert.isArray(res.body.conflict, "conflict should be an array");
+          assert.strictEqual(
+            res.body.conflict.length,
+            1,
+            "conflict should be an array of length 1"
+          );
           done();
         });
     });
@@ -131,12 +156,20 @@ suite("Functional Tests", () => {
           value: 4,
         })
         .end((_, res) => {
-          assert.isObject(res.body);
-          assert.property(res.body, "valid");
-          assert.isFalse(res.body.valid);
-          assert.property(res.body, "conflict");
-          assert.isArray(res.body.conflict);
-          assert.strictEqual(res.body.conflict.length, 2);
+          assert.isObject(res.body, "response should be an object");
+          assert.property(res.body, "valid", "response should include valid");
+          assert.isFalse(res.body.valid, "valid should be false");
+          assert.property(
+            res.body,
+            "conflict",
+            "response should include conflict"
+          );
+          assert.isArray(res.body.conflict, "conflict should be an array");
+          assert.strictEqual(
+            res.body.conflict.length,
+            2,
+            "conflict should be an array of length 2"
+          );
           done();
         });
     });
@@ -152,12 +185,20 @@ suite("Functional Tests", () => {
           value: 9,
         })
         .end((_, res) => {
-          assert.isObject(res.body);
-          assert.property(res.body, "valid");
-          assert.isFalse(res.body.valid);
-          assert.property(res.body, "conflict");
-          assert.isArray(res.body.conflict);
-          assert.strictEqual(res.body.conflict.length, 3);
+          assert.isObject(res.body, "response should be an object");
+          assert.property(res.body, "valid", "response should include valid");
+          assert.isFalse(res.body.valid, "valid should be false");
+          assert.property(
+            res.body,
+            "conflict",
+            "response should include conflict"
+          );
+          assert.isArray(res.body.conflict, "conflict should be an array");
+          assert.strictEqual(
+            res.body.conflict.length,
+            3,
+            "conflict should be an array of length 3"
+          );
           done();
         });
     });
@@ -172,7 +213,11 @@ suite("Functional Tests", () => {
           coordinate: "H8",
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, { error: "Required field(s) missing" });
+          assert.deepEqual(
+            res.body,
+            { error: "Required field(s) missing" },
+            'response should include { error: "Required field(s) missing" }'
+          );
           done();
         });
     });
@@ -188,7 +233,11 @@ suite("Functional Tests", () => {
           value: 9,
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, { error: "Invalid characters in puzzle" });
+          assert.deepEqual(
+            res.body,
+            { error: "Invalid characters in puzzle" },
+            'response should include { error: "Invalid characters in puzzle" }'
+          );
           done();
         });
     });
@@ -204,9 +253,13 @@ suite("Functional Tests", () => {
           value: 9,
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, {
-            error: "Expected puzzle to be 81 characters long",
-          });
+          assert.deepEqual(
+            res.body,
+            {
+              error: "Expected puzzle to be 81 characters long",
+            },
+            'response should include { error: "Expected puzzle to be 81 characters long" }'
+          );
           done();
         });
     });
@@ -222,7 +275,11 @@ suite("Functional Tests", () => {
           value: 9,
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, { error: "Invalid coordinate" });
+          assert.deepEqual(
+            res.body,
+            { error: "Invalid coordinate" },
+            'response should include { error: "Invalid coordinate" }'
+          );
           done();
         });
     });
@@ -238,7 +295,11 @@ suite("Functional Tests", () => {
           value: 0,
         })
         .end((_, res) => {
-          assert.deepEqual(res.body, { error: "Invalid value" });
+          assert.deepEqual(
+            res.body,
+            { error: "Invalid value" },
+            'response should include { error: "Invalid value" }'
+          );
           done();
         });
     });

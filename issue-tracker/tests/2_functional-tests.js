@@ -29,34 +29,44 @@ suite("Functional Tests", function () {
       .post("/api/issues/apitest")
       .send(issue)
       .end(function (err, res) {
-        assert.hasAllKeys(res.body, [
-          "assigned_to",
-          "status_text",
-          "open",
-          "_id",
-          "issue_title",
-          "issue_text",
-          "created_by",
-          "created_on",
-          "updated_on",
-        ]);
+        assert.hasAllKeys(
+          res.body,
+          [
+            "assigned_to",
+            "status_text",
+            "open",
+            "_id",
+            "issue_title",
+            "issue_text",
+            "created_by",
+            "created_on",
+            "updated_on",
+          ],
+          "response should include assigned_to, status_text, open, _id, issue_title, issue_text, created_by, created_on, updated_on"
+        );
 
-        assert.include(res.body, {
-          ...issue,
-          open: true,
-        });
+        assert.include(
+          res.body,
+          {
+            ...issue,
+            open: true,
+          },
+          "response should include issue"
+        );
 
-        // assert.isTrue(res.body.open);
+        // assert.isTrue(res.body.open. "open should be true");
 
         assert.approximately(
           date.getTime(),
           new Date(res.body.created_on).getTime(),
-          500
+          500,
+          `created_on should approximate ${date}`
         );
         assert.approximately(
           date.getTime(),
           new Date(res.body.updated_on).getTime(),
-          500
+          500,
+          `updated_on should approximate ${date}`
         );
         done();
       });
@@ -84,38 +94,48 @@ suite("Functional Tests", function () {
       .end(function (err, res) {
         assert.equal(res.status, 200);
 
-        assert.hasAllKeys(res.body, [
-          "assigned_to",
-          "status_text",
-          "open",
-          "_id",
-          "issue_title",
-          "issue_text",
-          "created_by",
-          "created_on",
-          "updated_on",
-        ]);
+        assert.hasAllKeys(
+          res.body,
+          [
+            "assigned_to",
+            "status_text",
+            "open",
+            "_id",
+            "issue_title",
+            "issue_text",
+            "created_by",
+            "created_on",
+            "updated_on",
+          ],
+          "response should include assigned_to, status_text, open, _id, issue_title, issue_text, created_by, created_on, updated_on"
+        );
 
-        assert.include(res.body, {
-          ...issue,
-          assigned_to: "",
-          status_text: "",
-          open: true,
-        });
+        assert.include(
+          res.body,
+          {
+            ...issue,
+            assigned_to: "",
+            status_text: "",
+            open: true,
+          },
+          "response should include issue with optional values"
+        );
 
-        // assert.strictEqual(res.body.assigned_to, "");
-        // assert.strictEqual(res.body.status_text, "");
-        // assert.isTrue(res.body.open);
+        // assert.strictEqual(res.body.assigned_to, "", "assigned_to should be an empty string");
+        // assert.strictEqual(res.body.status_text, "", "status_text should be an empty string");
+        // assert.isTrue(res.body.open, "open should be true");
 
         assert.approximately(
           date.getTime(),
           new Date(res.body.created_on).getTime(),
-          500
+          500,
+          `created_on should approximate ${date}`
         );
         assert.approximately(
           date.getTime(),
           new Date(res.body.updated_on).getTime(),
-          500
+          500,
+          `updated_on should approximate ${date}`
         );
         done();
       });
@@ -135,9 +155,11 @@ suite("Functional Tests", function () {
       .post("/api/issues/apitest")
       .send(issue)
       .end(function (err, res) {
-        assert.equal(res.status, 200);
-
-        assert.deepEqual(res.body, { error: "required field(s) missing" });
+        assert.deepEqual(
+          res.body,
+          { error: "required field(s) missing" },
+          'response should include { error: "required field(s) missing" }'
+        );
         done();
       });
   });
@@ -164,9 +186,7 @@ suite("Functional Tests", function () {
           .request(server)
           .get("/api/issues/apitest")
           .end(function (err, res) {
-            assert.equal(res.status, 200);
-
-            assert.isArray(res.body);
+            assert.isArray(res.body, "response should be an array");
 
             const existingIssue = res.body.find(
               (d) =>
@@ -175,7 +195,7 @@ suite("Functional Tests", function () {
                 d.created_by === issue.created_by
             );
 
-            assert.isDefined(existingIssue);
+            assert.isDefined(existingIssue, "issue should exist");
 
             done();
           });
@@ -204,12 +224,11 @@ suite("Functional Tests", function () {
           .request(server)
           .get(`/api/issues/apitest?created_by=${issue.created_by}`)
           .end(function (err, res) {
-            assert.equal(res.status, 200);
-
-            assert.isArray(res.body);
+            assert.isArray(res.body, "response should be an array");
 
             assert.isTrue(
-              res.body.every((d) => d.created_by === issue.created_by)
+              res.body.every((d) => d.created_by === issue.created_by),
+              `every issue should be created by ${issue.created_by}`
             );
 
             done();
@@ -241,15 +260,15 @@ suite("Functional Tests", function () {
             `/api/issues/apitest?issue_title=${issue.issue_title}&created_by=${issue.created_by}`
           )
           .end(function (err, res) {
-            assert.equal(res.status, 200);
-            assert.isArray(res.body);
+            assert.isArray(res.body, "response is an array");
 
             assert.isTrue(
               res.body.every(
                 (d) =>
                   d.issue_title === issue.issue_title &&
                   d.created_by === issue.created_by
-              )
+              ),
+              `every issue should be created by ${issue.created_by} and titled ${issue.issue_title}`
             );
 
             done();
@@ -290,7 +309,7 @@ suite("Functional Tests", function () {
                 d.created_by === issue.created_by
             );
 
-            assert.isDefined(existingIssue);
+            assert.isDefined(existingIssue, "issue should exist");
 
             const { _id } = existingIssue;
 
@@ -302,20 +321,27 @@ suite("Functional Tests", function () {
                 open: true,
               })
               .end(function (err, res) {
-                assert.equal(res.status, 200);
-                assert.deepEqual(res.body, {
-                  result: "successfully updated",
-                  _id,
-                });
+                assert.deepEqual(
+                  res.body,
+                  {
+                    result: "successfully updated",
+                    _id,
+                  },
+                  "response should include updated issue"
+                );
 
                 chai
                   .request(server)
                   .get(`/api/issues/apitest?_id=${_id}`)
                   .end(function (err, res) {
                     const updatedIssue = res.body[0];
-                    assert.isDefined(updatedIssue);
-                    assert.strictEqual(updatedIssue._id, _id);
-                    assert.isFalse(updatedIssue.open);
+                    assert.isDefined(updatedIssue, "issue should exist");
+                    assert.strictEqual(
+                      updatedIssue._id,
+                      _id,
+                      `_id should be ${_id}`
+                    );
+                    assert.isFalse(updatedIssue.open, "open should be false");
 
                     done();
                   });
@@ -357,7 +383,7 @@ suite("Functional Tests", function () {
                 d.created_by === issue.created_by
             );
 
-            assert.isDefined(existingIssue);
+            assert.isDefined(existingIssue, "issue should exist");
 
             const { _id } = existingIssue;
 
@@ -370,21 +396,32 @@ suite("Functional Tests", function () {
                 assigned_to: "replit",
               })
               .end(function (err, res) {
-                assert.equal(res.status, 200);
-                assert.deepEqual(res.body, {
-                  result: "successfully updated",
-                  _id,
-                });
+                assert.deepEqual(
+                  res.body,
+                  {
+                    result: "successfully updated",
+                    _id,
+                  },
+                  "response should include updated issue"
+                );
 
                 chai
                   .request(server)
                   .get(`/api/issues/apitest?_id=${_id}`)
                   .end(function (err, res) {
                     const updatedIssue = res.body[0];
-                    assert.isDefined(updatedIssue);
-                    assert.strictEqual(updatedIssue._id, _id);
-                    assert.isFalse(updatedIssue.open);
-                    assert.strictEqual(updatedIssue.assigned_to, "replit");
+                    assert.isDefined(updatedIssue, "issue should exist");
+                    assert.strictEqual(
+                      updatedIssue._id,
+                      _id,
+                      `_id should be ${_id}`
+                    );
+                    assert.isFalse(updatedIssue.open, "open should be false");
+                    assert.strictEqual(
+                      updatedIssue.assigned_to,
+                      "replit",
+                      'assigned_to should be "replit"'
+                    );
 
                     done();
                   });
@@ -402,8 +439,11 @@ suite("Functional Tests", function () {
       .put("/api/issues/apitest")
       .send({})
       .end(function (err, res) {
-        assert.equal(res.status, 200);
-        assert.deepEqual(res.body, { error: "missing _id" });
+        assert.deepEqual(
+          res.body,
+          { error: "missing _id" },
+          'response should include { error: "missing _id" }'
+        );
 
         done();
       });
@@ -449,11 +489,14 @@ suite("Functional Tests", function () {
                 _id,
               })
               .end(function (err, res) {
-                assert.equal(res.status, 200);
-                assert.deepEqual(res.body, {
-                  error: "no update field(s) sent",
-                  _id,
-                });
+                assert.deepEqual(
+                  res.body,
+                  {
+                    error: "no update field(s) sent",
+                    _id,
+                  },
+                  'response should include { error: "no update field(s) sent" }'
+                );
 
                 done();
               });
@@ -476,8 +519,11 @@ suite("Functional Tests", function () {
         issue_title: "PUT/4",
       })
       .end(function (err, res) {
-        assert.equal(res.status, 200);
-        assert.deepEqual(res.body, { error: "could not update", _id });
+        assert.deepEqual(
+          res.body,
+          { error: "could not update", _id },
+          'response should include { error: "could not update" } with the input _id'
+        );
 
         done();
       });
@@ -514,7 +560,7 @@ suite("Functional Tests", function () {
                 d.created_by === issue.created_by
             );
 
-            assert.isDefined(existingIssue);
+            assert.isDefined(existingIssue, "issue should exist");
 
             const { _id } = existingIssue;
 
@@ -536,7 +582,7 @@ suite("Functional Tests", function () {
                         d.created_by === issue.created_by
                     );
 
-                    assert.isUndefined(missingIssue);
+                    assert.isUndefined(missingIssue, "issue should not exist");
 
                     done();
                   });

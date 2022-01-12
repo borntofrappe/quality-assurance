@@ -18,7 +18,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "Mangoes are my favourite fruit."
+        "Mangoes are my favourite fruit.",
+        'function returns "Mangoes are my favourite fruit."'
       );
 
       done();
@@ -32,7 +33,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "I ate yoghurt for breakfast."
+        "I ate yoghurt for breakfast.",
+        'function returns "I ate yoghurt for breakfast."'
       );
 
       done();
@@ -46,7 +48,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "We had a party at my friend's flat."
+        "We had a party at my friend's flat.",
+        'function returns "We had a party at my friend\'s flat."'
       );
 
       done();
@@ -60,7 +63,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "Can you toss this in the bin for me?"
+        "Can you toss this in the bin for me?",
+        'function returns "Can you toss this in the bin for me?'
       );
 
       done();
@@ -74,7 +78,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "The car park was full."
+        "The car park was full.",
+        'function returns "The car park was full."'
       );
 
       done();
@@ -88,7 +93,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "Like a high tech Heath Robinson device."
+        "Like a high tech Heath Robinson device.",
+        'function returns "Like a high tech Heath Robinson device."'
       );
 
       done();
@@ -102,7 +108,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "To bunk off means to skip class or work."
+        "To bunk off means to skip class or work.",
+        'function returns "To bunk off means to skip class or work."'
       );
 
       done();
@@ -116,7 +123,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "No Mr Bond, I expect you to die."
+        "No Mr Bond, I expect you to die.",
+        'function returns "No Mr Bond, I expect you to die."'
       );
 
       done();
@@ -130,7 +138,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "Dr Grosh will see you now."
+        "Dr Grosh will see you now.",
+        'function returns "Dr Grosh will see you now."'
       );
 
       done();
@@ -144,7 +153,8 @@ suite("Unit Tests", () => {
             "american-to-british"
           )
         ),
-        "Lunch is at 12.15 today."
+        "Lunch is at 12.15 today.",
+        'function returns "Lunch is at 12.15 today."'
       );
 
       done();
@@ -158,7 +168,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "We watched the soccer match for a while."
+        "We watched the soccer match for a while.",
+        'function returns "We watched the soccer match for a while."'
       );
 
       done();
@@ -172,7 +183,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "Tylenol takes up to an hour to work."
+        "Tylenol takes up to an hour to work.",
+        'function returns "Tylenol takes up to an hour to work."'
       );
 
       done();
@@ -186,7 +198,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "First, caramelize the onions."
+        "First, caramelize the onions.",
+        'function returns "First, caramelize the onions."'
       );
 
       done();
@@ -200,7 +213,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "I spent the public holiday at the carnival."
+        "I spent the public holiday at the carnival.",
+        'function returns "I spent the public holiday at the carnival."'
       );
 
       done();
@@ -214,7 +228,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "I had a cookie then went to the fish-and-chip shop."
+        "I had a cookie then went to the fish-and-chip shop.",
+        'function returns "I had a cookie then went to the fish-and-chip shop."'
       );
 
       done();
@@ -228,7 +243,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "I've just got odds and ends in my fanny pack."
+        "I've just got odds and ends in my fanny pack.",
+        'function returns "I\'ve just got odds and ends in my fanny pack."'
       );
 
       done();
@@ -242,7 +258,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "The swap meet at Boxted Airfield was called off."
+        "The swap meet at Boxted Airfield was called off.",
+        'function returns "The swap meet at Boxted Airfield was called off."'
       );
 
       done();
@@ -256,7 +273,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "Have you met Mrs. Kalyani?"
+        "Have you met Mrs. Kalyani?",
+        'function returns "Have you met Mrs. Kalyani?'
       );
 
       done();
@@ -270,7 +288,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "Prof. Joyner of King's College, London."
+        "Prof. Joyner of King's College, London.",
+        'function returns "Prof. Joyner of King\'s College, London."'
       );
 
       done();
@@ -284,7 +303,8 @@ suite("Unit Tests", () => {
             "british-to-american"
           )
         ),
-        "Tea time is usually around 4 or 4:30."
+        "Tea time is usually around 4 or 4:30.",
+        'function returns "Tea time is usually around 4 or 4:30."'
       );
 
       done();
@@ -298,7 +318,8 @@ suite("Unit Tests", () => {
           "Mangoes are my favorite fruit.",
           "american-to-british"
         ),
-        'Mangoes are my <span class="highlight">favourite</span> fruit.'
+        'Mangoes are my <span class="highlight">favourite</span> fruit.',
+        'function returns `Mangoes are my <span class="highlight">favourite</span> fruit.`'
       );
 
       done();
@@ -310,7 +331,8 @@ suite("Unit Tests", () => {
           "I ate yogurt for breakfast.",
           "american-to-british"
         ),
-        'I ate <span class="highlight">yoghurt</span> for breakfast.'
+        'I ate <span class="highlight">yoghurt</span> for breakfast.',
+        'function returns `I ate <span class="highlight">yoghurt</span> for breakfast.`'
       );
 
       done();
@@ -322,7 +344,8 @@ suite("Unit Tests", () => {
           "We watched the footie match for a while.",
           "british-to-american"
         ),
-        'We watched the <span class="highlight">soccer</span> match for a while.'
+        'We watched the <span class="highlight">soccer</span> match for a while.',
+        'function returns `We watched the <span class="highlight">soccer</span> match for a while.`'
       );
 
       done();
@@ -334,7 +357,8 @@ suite("Unit Tests", () => {
           "Paracetamol takes up to an hour to work.",
           "british-to-american"
         ),
-        '<span class="highlight">Tylenol</span> takes up to an hour to work.'
+        '<span class="highlight">Tylenol</span> takes up to an hour to work.',
+        'function returns `<span class="highlight">Tylenol</span> takes up to an hour to work.`'
       );
 
       done();

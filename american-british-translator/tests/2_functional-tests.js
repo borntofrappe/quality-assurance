@@ -26,12 +26,14 @@ suite("Functional Tests", () => {
           locale,
         })
         .end((_, res) => {
-          assert.strictEqual(res.status, 200);
-
-          assert.deepEqual(res.body, {
-            text,
-            translation,
-          });
+          assert.deepEqual(
+            res.body,
+            {
+              text,
+              translation,
+            },
+            "response should include text translation"
+          );
 
           done();
         });
@@ -42,8 +44,6 @@ suite("Functional Tests", () => {
         "Loudhailer is sure a funny word in British English. Unfortunately it's lost in translation. Like pritt-stick and ice lolly. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20.18. At least in the UK.";
       const locale = "british-to-canadian";
 
-      const error = "Invalid value for locale field";
-
       chai
         .request(server)
         .post("/api/translate")
@@ -52,8 +52,11 @@ suite("Functional Tests", () => {
           locale,
         })
         .end((_, res) => {
-          assert.strictEqual(res.status, 200);
-          assert.deepEqual(res.body, { error });
+          assert.deepEqual(
+            res.body,
+            { error: "Invalid value for locale field" },
+            'response should include { error: "Invalid value for locale field" }'
+          );
 
           done();
         });
@@ -63,8 +66,6 @@ suite("Functional Tests", () => {
       const text =
         "Loudhailer is sure a funny word in British English. Unfortunately it's lost in translation. Like pritt-stick and ice lolly. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20.18. At least in the UK.";
 
-      const error = "Required field(s) missing";
-
       chai
         .request(server)
         .post("/api/translate")
@@ -72,8 +73,11 @@ suite("Functional Tests", () => {
           text,
         })
         .end((_, res) => {
-          assert.strictEqual(res.status, 200);
-          assert.deepEqual(res.body, { error });
+          assert.deepEqual(
+            res.body,
+            { error: "Required field(s) missing" },
+            'response should include { error: "Required field(s) missing" }'
+          );
 
           done();
         });
@@ -82,8 +86,6 @@ suite("Functional Tests", () => {
     test("Translation with missing locale field: POST request `to /api/translate`", function (done) {
       const locale = "british-tp-american";
 
-      const error = "Required field(s) missing";
-
       chai
         .request(server)
         .post("/api/translate")
@@ -91,9 +93,11 @@ suite("Functional Tests", () => {
           locale,
         })
         .end((_, res) => {
-          assert.strictEqual(res.status, 200);
-
-          assert.deepEqual(res.body, { error });
+          assert.deepEqual(
+            res.body,
+            { error: "Required field(s) missing" },
+            'response should include { error: "Required field(s) missing" }'
+          );
 
           done();
         });
@@ -103,8 +107,6 @@ suite("Functional Tests", () => {
       const text = "";
       const locale = "british-tp-american";
 
-      const error = "No text to translate";
-
       chai
         .request(server)
         .post("/api/translate")
@@ -113,9 +115,11 @@ suite("Functional Tests", () => {
           locale,
         })
         .end((_, res) => {
-          assert.strictEqual(res.status, 200);
-
-          assert.deepEqual(res.body, { error });
+          assert.deepEqual(
+            res.body,
+            { error: "No text to translate" },
+            'response should include { error: "No text to translate" }'
+          );
 
           done();
         });
@@ -126,8 +130,6 @@ suite("Functional Tests", () => {
         "Loudhailer is sure a funny word in British English. Unfortunately it's lost in translation. Like pritt-stick and ice lolly. Look them up, I promise you won't regret it. By the way, and at this very moment, the clock tells me it's 20.18. At least in the UK.";
       const locale = "american-to-british";
 
-      const translation = "Everything looks good to me!";
-
       chai
         .request(server)
         .post("/api/translate")
@@ -136,12 +138,14 @@ suite("Functional Tests", () => {
           locale,
         })
         .end((_, res) => {
-          assert.strictEqual(res.status, 200);
-
-          assert.deepEqual(res.body, {
-            text,
-            translation,
-          });
+          assert.deepEqual(
+            res.body,
+            {
+              text,
+              translation: "Everything looks good to me!",
+            },
+            'response should include text and "Everything looks good to me!" for the translation'
+          );
 
           done();
         });

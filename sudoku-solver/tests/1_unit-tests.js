@@ -10,7 +10,8 @@ suite("UnitTests", () => {
     assert.isTrue(
       solver.validate(
         "82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51"
-      )
+      ),
+      "function should return true"
     );
     done();
   });
@@ -23,7 +24,8 @@ suite("UnitTests", () => {
         solver.validate(
           "82..4..6...06..89...98315.749.157.............AB..4...96.415..81..7632..3...28.51"
         ),
-      "Invalid characters in puzzle"
+      "Invalid characters in puzzle",
+      "error should be 'Invalid characters in puzzle'"
     );
     
     */
@@ -33,7 +35,11 @@ suite("UnitTests", () => {
         "82..4..6...06..89...98315.749.157.............AB..4...96.415..81..7632..3...28.51"
       );
     } catch (error) {
-      assert.strictEqual(error.message, "Invalid characters in puzzle");
+      assert.strictEqual(
+        error.message,
+        "Invalid characters in puzzle",
+        "error should be 'Invalid characters in puzzle'"
+      );
     }
 
     done();
@@ -47,7 +53,8 @@ suite("UnitTests", () => {
         solver.validate(
           "82..4..6...16..89...98315.749.157.............53..4..."
         ),
-      "Expected puzzle to be 81 characters long"
+      "Expected puzzle to be 81 characters long",
+      "error should be 'Expected puzzle to be 81 characters long'"
     );
     
     */
@@ -57,7 +64,8 @@ suite("UnitTests", () => {
     } catch (error) {
       assert.strictEqual(
         error.message,
-        "Expected puzzle to be 81 characters long"
+        "Expected puzzle to be 81 characters long",
+        "error should be 'Expected puzzle to be 81 characters long'"
       );
     }
 
@@ -71,7 +79,8 @@ suite("UnitTests", () => {
         0,
         0,
         1
-      )
+      ),
+      "function should return true"
     );
     done();
   });
@@ -83,7 +92,8 @@ suite("UnitTests", () => {
         0,
         0,
         9
-      )
+      ),
+      "function should return false"
     );
     done();
   });
@@ -95,7 +105,8 @@ suite("UnitTests", () => {
         0,
         0,
         8
-      )
+      ),
+      "function should return true"
     );
     done();
   });
@@ -107,7 +118,8 @@ suite("UnitTests", () => {
         0,
         0,
         7
-      )
+      ),
+      "function should return false"
     );
     done();
   });
@@ -119,7 +131,8 @@ suite("UnitTests", () => {
         0,
         0,
         3
-      )
+      ),
+      "function should return true"
     );
     done();
   });
@@ -131,7 +144,8 @@ suite("UnitTests", () => {
         0,
         0,
         2
-      )
+      ),
+      "function should return false"
     );
     done();
   });
@@ -140,7 +154,8 @@ suite("UnitTests", () => {
     assert.isOk(
       solver.solve(
         "..839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1"
-      )
+      ),
+      "function should return a truthy value"
     );
 
     done();
@@ -154,7 +169,8 @@ suite("UnitTests", () => {
         solver.solve(
           "8.839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1"
         ),
-      "Puzzle cannot be solved"
+      "Puzzle cannot be solved",
+      "error message should be 'Puzzle cannot be solved'"
     );
     
     */
@@ -164,7 +180,11 @@ suite("UnitTests", () => {
         "8.839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1"
       );
     } catch (error) {
-      assert.strictEqual(error.message, "Puzzle cannot be solved");
+      assert.strictEqual(
+        error.message,
+        "Puzzle cannot be solved",
+        "error message should be 'Puzzle cannot be solved'"
+      );
     }
 
     done();
@@ -175,7 +195,8 @@ suite("UnitTests", () => {
       solver.solve(
         "..839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1"
       ),
-      "218396745753284196496157832531672984649831257827549613962415378185763429374928561"
+      "218396745753284196496157832531672984649831257827549613962415378185763429374928561",
+      "function should return '218396745753284196496157832531672984649831257827549613962415378185763429374928561'"
     );
     done();
   });

@@ -62,8 +62,16 @@ suite("Functional Tests", function () {
             })
             .end((_, res) => {
               assert.isObject(res.body);
-              assert.hasAllKeys(res.body, ["title", "_id"]);
-              assert.strictEqual(res.body.title, title);
+              assert.hasAllKeys(
+                res.body,
+                ["title", "_id"],
+                "response should contain title and _id"
+              );
+              assert.strictEqual(
+                res.body.title,
+                title,
+                `title should be ${title}`
+              );
 
               done();
             });
@@ -75,7 +83,11 @@ suite("Functional Tests", function () {
             .post("/api/books")
             .send({})
             .end((_, res) => {
-              assert.strictEqual(res.text, "missing required field title");
+              assert.strictEqual(
+                res.text,
+                "missing required field title",
+                "response should be 'missing required field title'"
+              );
 
               done();
             });
@@ -89,7 +101,7 @@ suite("Functional Tests", function () {
           .request(server)
           .get("/api/books")
           .end((_, res) => {
-            assert.isArray(res.body);
+            assert.isArray(res.body, "response should be an array");
 
             done();
           });
@@ -105,7 +117,11 @@ suite("Functional Tests", function () {
           .request(server)
           .get(`/api/books/${id}`)
           .end((_, res) => {
-            assert.strictEqual(res.text, "no book exists");
+            assert.strictEqual(
+              res.text,
+              "no book exists",
+              "response should be 'no book exists'"
+            );
 
             done();
           });
@@ -127,12 +143,27 @@ suite("Functional Tests", function () {
               .request(server)
               .get(`/api/books/${_id}`)
               .end((_, res) => {
-                assert.isObject(res.body);
-                assert.hasAllKeys(res.body, ["title", "_id", "comments"]);
-                assert.strictEqual(res.body.title, title);
-                assert.strictEqual(res.body._id, _id);
-                assert.isArray(res.body.comments);
-                assert.strictEqual(res.body.comments.length, 0);
+                assert.isObject(res.body, "response should be an object");
+                assert.hasAllKeys(
+                  res.body,
+                  ["title", "_id", "comments"],
+                  "response should contain title, _id and comments"
+                );
+                assert.strictEqual(
+                  res.body.title,
+                  title,
+                  `title should be ${title}`
+                );
+                assert.strictEqual(res.body._id, _id, `_id should be ${_id}`);
+                assert.isArray(
+                  res.body.comments,
+                  "comments should be an array"
+                );
+                assert.strictEqual(
+                  res.body.comments.length,
+                  0,
+                  "comments should be an empty array"
+                );
 
                 done();
               });
@@ -163,12 +194,27 @@ suite("Functional Tests", function () {
                   comment,
                 })
                 .end((_, res) => {
-                  assert.isObject(res.body);
-                  assert.hasAllKeys(res.body, ["title", "_id", "comments"]);
-                  assert.strictEqual(res.body.title, title);
-                  assert.strictEqual(res.body._id, _id);
-                  assert.isArray(res.body.comments);
-                  assert.isAbove(res.body.comments.length, 0);
+                  assert.isObject(res.body, "response should be an object");
+                  assert.hasAllKeys(
+                    res.body,
+                    ["title", "_id", "comments"],
+                    "response should contain title, _id and comments"
+                  );
+                  assert.strictEqual(
+                    res.body.title,
+                    title,
+                    `title should be ${title}`
+                  );
+                  assert.strictEqual(res.body._id, _id, `_id should be ${_id}`);
+                  assert.isArray(
+                    res.body.comments,
+                    "comments should be an array"
+                  );
+                  assert.isAbove(
+                    res.body.comments.length,
+                    0,
+                    "comments array should not be empty"
+                  );
 
                   done();
                 });
@@ -194,7 +240,8 @@ suite("Functional Tests", function () {
                 .end((_, res) => {
                   assert.strictEqual(
                     res.text,
-                    "missing required field comment"
+                    "missing required field comment",
+                    "response should be 'missing required field comment'"
                   );
 
                   done();
@@ -213,7 +260,11 @@ suite("Functional Tests", function () {
               comment,
             })
             .end((_, res) => {
-              assert.strictEqual(res.text, "no book exists");
+              assert.strictEqual(
+                res.text,
+                "no book exists",
+                "response should be 'no book exists'"
+              );
 
               done();
             });
@@ -238,13 +289,21 @@ suite("Functional Tests", function () {
               .request(server)
               .delete(`/api/books/${_id}`)
               .end((_, res) => {
-                assert.strictEqual(res.text, "delete successful");
+                assert.strictEqual(
+                  res.text,
+                  "delete successful",
+                  "response should be 'delete successful'"
+                );
 
                 chai
                   .request(server)
                   .get(`/api/books/${_id}`)
                   .end((_, res) => {
-                    assert.strictEqual(res.text, "no book exists");
+                    assert.strictEqual(
+                      res.text,
+                      "no book exists",
+                      "response should be 'no book exists'"
+                    );
 
                     done();
                   });
@@ -260,7 +319,11 @@ suite("Functional Tests", function () {
           .request(server)
           .delete(`/api/books/${id}`)
           .end((_, res) => {
-            assert.strictEqual(res.text, "no book exists");
+            assert.strictEqual(
+              res.text,
+              "no book exists",
+              "response should be 'no book exists'"
+            );
 
             done();
           });
