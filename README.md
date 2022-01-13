@@ -620,3 +620,719 @@ browser.fill("surname", "Colombo").then(() => {
 ```
 
 While `success` checks the status code to match 200, `text` asserts the text of an element specified through a CSS selector and `elements` checks the number of elements nested in the selected container.
+
+### Advanced Node and Express
+
+[Link to REPL](https://replit.com/@borntofrappe/boilerplate-advancednode)
+
+The goal is to create a node app with authentication, a templating engine and client-server communication.
+
+#### pug
+
+A template engine like `pug` produces the relevant HTML file at runtime.
+
+```json
+{
+  "dependencies": {
+    "pug": "~3.0.0"
+  }
+}
+```
+
+Set up the `pug` engine in the express app.
+
+```js
+app.set("view engine", "pug");
+```
+
+By default the application will look for the files in the `views/` folder.
+
+```js
+// views/index.pug
+res.render("index.pug");
+```
+
+One of the benefits of a view engine is that it's possible to pass data to change the content rendered on page. From the `res.render` function send the relevant information as a second argument.
+
+```js
+res.render("/index.pug", {
+  title: "Hello world",
+  date: new Date(),
+});
+```
+
+In the `.pug` file include the variable through a specific syntax. It's possible to include the value inline with the `#{}` sequence.
+
+```pug
+time=date.toDateString()
+```
+
+Or again following the equal sign character `=`.
+
+```pug
+h1=title
+```
+
+_Please note:_ pug is based on whitespace and indentation, and the documentation in [the module's README](https://github.com/pugjs/pug#syntax) provides more information.
+
+#### passport and session
+
+`passport` handles authentication validating the user. `express-session` stores information in a cookie and on the client, in order to compare the value to an identifier on the server and maintain a connection.
+
+```json
+{
+  "dependencies": {
+    "express-session": "~1.17.1",
+    "passport": "~0.4.1"
+  }
+}
+```
+
+```js
+const passport = require("passport");
+const session = require("express-session");
+```
+
+Setup the session with a secret, a random value in the env value to use to encrypt the cookie
+
+```js
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+```
+
+Passport works by serializing and de-serializing information. The process allows to transform an input object to a key, and the key back to the object. By storing the key it's possible to keep data secure.
+
+With `serializeUser` passport receives the data and a callback to return a key. The key is often the `_id` created in the database, unique in value. Using only the identifier allows to reduce the amount of data stored.
+
+```js
+passport.serializeUser(user, (done) => {
+  done(null, user.id);
+});
+```
+
+With `deserialize` passport receives the key and a similar callback, this time to return the data.
+
+```js
+passport.deserializeUser(id, (done) => {
+  User.findOne({ _id: id }, (err, user) => {
+    done(null, user);
+  });
+});
+```
+
+To create an ID similar to one set up by the database use the `mongodb` library.
+
+```json
+{
+  "dependencies": {
+    "mongodb": "~3.6.0"
+  }
+}
+```
+
+```js
+const ObjectID = require("mongodb").ObjectID;
+```
+
+The function will allow to create a unique identifier based on the key passed to the `deserialize` function.
+
+```js
+passport.deserializeUser((id, done) => {
+  myDB.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+    done(null, doc);
+  });
+});
+```
+
+Since the application relies on a database the app logic is conditioned to a valid connection.
+
+```js
+myDB(async (client) => {});
+```
+
+If the connection fails immediately render the error in the page.
+
+```js
+.catch((error) => {
+  app.route("/").get((req, res) => {
+    res.render("pug", {
+      title: error,
+      message: "Unable to login",
+    });
+  });
+});
+```
+
+If the connection is established prompt the user to sign in.
+
+First retrieve the relevant collection and render the correct page.
+
+```js
+myDB(async (client) => {
+  const myDatabase = await client.db("database").collection("users");
+
+  app.route("/").get();
+});
+```
+
+Then include the passport functions to serialize and de-serialize the information.
+
+```js
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+
+passport.deserializeUser((id, done) => {
+  myDatabase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+    done(null, doc);
+  });
+});
+```
+
+#### passport-local
+
+Passport ultimately relies on a _strategy_ to authenticate users. Consider for instance a local strategy, relying on local data, or a GitHub strategy, relying on the social authentication provided by GitHub.
+
+Install the relevant strategy and then follow the pertinent information.
+
+```json
+{
+  "dependencies": {
+    "passport-local": "~1.0.0"
+  }
+}
+```
+
+For the local strategy initialize the module.
+
+```js
+const LocalStrategy = require("passport-local");
+```
+
+Past the serialize and deserialize functions set up the strategy with `passport.use`.
+
+```js
+passport.use(new LocalStrategy());
+```
+
+The strategy receives a function with three arguments: a username, a password and a callback function to execute once you have handled the authentication.
+
+```js
+new LocalStrategy((username, password, done) => {});
+```
+
+Begin by looking for an existing user.
+
+```js
+myDatabase.findOne(
+  {
+    username,
+  },
+  (err, user) => {
+    if (err) {
+      return done(err);
+    }
+    console.log(`User ${username} attempted to log in`);
+  }
+);
+```
+
+If the user does not exist or the password does not match call `done` with a booelan describing the lack of authentication.
+
+```js
+if (!user) {
+  return done(null, false);
+}
+if (password !== user.password) {
+  return done(null, false);
+}
+```
+
+Outside of these instances the user exists and the password matches. Authenticate the user returning the `done` function with the relevant document.
+
+```js
+return done(null, user);
+```
+
+#### Authenticate
+
+Once you have set up the strategy the application routes are able to use `passport.authenticate` with said strategy.
+
+```js
+passport.authenticate("local");
+```
+
+The function works as a middleware, so that it is possible to authenticate the user before sending a response.
+
+```js
+app.route("/login").post(passport.authenticate("local"), (req, res) => {
+  res.redirect("/profile");
+});
+```
+
+It's possible to further customize the middleware with an object, for instance to instruct a redirect when the authentication fails.
+
+```js
+passport.authenticate("local", { failureRedirect: "/" });
+```
+
+When the authentication succeeds, finally, the document is saved in `req.user`.
+
+```js
+app.route("/profile").get((req, res) => {
+  res.render("pug/profile.pug", {
+    username: req.user.username,
+  });
+});
+```
+
+#### Ensure authentication
+
+Passport adds a function to the request object to check if the user is indeed authenticated. It is possible to use this information in a middleware function to prevent a visit to `/profile` without the necessary permission.
+
+In the middleware call `next` when passport was able to add the `isAuthenticated` function.
+
+```js
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/");
+}
+```
+
+In the app route include the middleware prior to handling the response.
+
+```js
+app.route("/profile").get(ensureAuthenticated, (req, res) => {
+  // render profile.pug
+});
+```
+
+#### Log out
+
+Log out by unauthenticating the user with `req.logout()`. The function is added by passport on the request object.
+
+```js
+req.logout();
+res.redirect("/");
+```
+
+#### Register
+
+When registering a user the idea is to consider the following sequence:
+
+- query the database to find an existing user
+
+- if the user exist redirect to a page, like profile or the home page
+
+- if the user does not exist create a document and add it in the database with a username and password, before redirecting toward the desired page
+
+When creating the document **do not** store the password in plain text, however. To add a layer of security use `bcrypt` module.
+
+```json
+{
+  "dependencies": {
+    "bcrypt": "~5.0.0"
+  }
+}
+```
+
+```js
+const bcrypt = require("bcrypt");
+```
+
+Once initialized use the library and specifically the `hashSync` function to have a reference the passowrd more secure.
+
+```js
+const hash = bcrypt.hashSync(req.body.password, 12);
+```
+
+The idea is to store `username` and `hash`.
+
+`hashSync` produces the secure hash. `compareSync` allows to then check if an input value is indeed a hash. The function is used to check if the password patches when authenticating the user.
+
+```js
+// if(password !== user.password) {}
+if (!bcrypt.compareSync(password, user.password)) {
+  return done(null, false);
+}
+```
+
+#### Modules
+
+In place of having the authentication and routing logic in the same file the curriculum suggests separating the functionalities and exporting the connected logic.
+
+```js
+module.exports = function (app, myDatabase) {};
+```
+
+The individual files require the necessary modules and implement the connected logic.
+
+From the main file you then require the functionality and execute the logic as needed.
+
+```js
+const routes = require("./routes.js");
+const auth = require("./auth.js");
+
+// establish connection
+const myDatabase = await client.db("database").collection("users");
+routes(app, myDatabase);
+auth(app, myDatabase);
+```
+
+#### passport-github
+
+As an alternative to the local strategy set up with `passport-local` passport allows to authenticate users with GitHub and `passport-github`.
+
+```js
+const GitHubStrategy = require("passport-github").Strategy;
+```
+
+In this instance set up the strategy in `passport.use` with a series of options.
+
+```js
+passport.use(new GitHubStrategy({}));
+```
+
+Among these options three necessary values are: a client ID, a client secret and a callback URL. The information is retrieved from GitHub itself when creating a new application benefiting of the social authentication.
+
+```js
+new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL:
+    "https://boilerplate-advancednode.borntofrappe.repl.co/auth/github/callback",
+});
+```
+
+The strategy specifies with a second argument a callback function.
+
+```js
+new GitHubStrategy({}, (accessToken, refreshToken, profile, cb) => {
+  // ..
+});
+```
+
+`profile` is a sizeable object with information on the user. It's possible to use `profile.id` to retrieve a unique identifier and ultimately authenticate the user. Since the session object stores the identifier modify the `auth/github/callback` route to store its value, more on the route later.
+
+```js
+req.session.user_id = req.user.id;
+```
+
+In the specific application the information is used to create a document if necessary.
+
+```js
+myDatabase.findOneAndUpdate(
+  { id: profile.id },
+  {
+    $setOnInsert: {
+      id: profile.id,
+      username: profile.displayName || "Default Name",
+    },
+    $set: {
+      last_login: new Date(),
+    },
+    $inc: {
+      login_count: 1,
+    },
+  },
+  { upsert: true, new: true },
+  (err, doc) => {
+    return cb(null, doc.value);
+  }
+);
+```
+
+The different `$` directives allow to create a user in the database if necessary, update the `last_login` value and increment `login_count`.
+
+The final callback allows the strategy to terminate and the express app to continue to the relevant page.
+
+Just like with the local strategy, and past the set up, refer to the strategy by name to authenticate the user. Here there are two routes however.
+
+With `auth/github/` prompt the social authentication.
+
+```js
+app.route("/auth/github").get(passport.authenticate("github"));
+```
+
+With `auth/github/callback` handle a successful redirect from GitHub.
+
+```js
+app
+  .route("/auth/github/callback")
+  .get(
+    passport.authenticate("github", { failureRedirect: "/" }),
+    (req, res) => {
+      res.redirect("/profile");
+    }
+  );
+```
+
+The path ultimately matches the URL provided in the GitHub strategy.
+
+#### socket
+
+`socket.io` is a library to communicate with client and server.
+
+```json
+{
+  "dependencies": {
+    "socket.io": "~2.3.0"
+  }
+}
+```
+
+In terms of setup rely on the `http` module on top of the express app.
+
+```js
+const http = require("http").createServer(app);
+```
+
+Require the library passing the server as argument.
+
+```js
+const io = require("socket.io")(http);
+```
+
+Instead of listening on the app then, listen on the `http` module.
+
+```js
+http.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
+```
+
+The instance of the socket library allows to consider events through the `on` keyword.
+
+```js
+io.on("event", (socket) => {
+  // ..
+});
+```
+
+The `connection` event, for instance, signals that a user was able to connect to the application.
+
+```js
+io.on("connection", (socket) => {
+  console.log("User has connected");
+});
+```
+
+Create an instance of `io()` on the client to capture the event. In `public/client.js`, a script run when the page is rendered, add the following:
+
+```js
+let socket = io();
+```
+
+One way to communicate through the library is through the `emit` method.
+
+```js
+io.emit("event", payload);
+```
+
+All connected sockets are then able to capture the event and consider the optional data passed through the function.
+
+As a for instance consider a variable describing the number of connections established through the client. The instance on the client is equipped to log the value in the console.
+
+```js
+const socket = io();
+
+socket.on("user count", (count) => {
+  console.log(`${count} current users`);
+});
+```
+
+The server then increments a local variable following a connection, before emitting the connected event to all sockets.
+
+```js
+let currentUsers = 0;
+
+io.on("connection", (socket) => {
+  ++currentUsers;
+  io.emit("user count", currentUsers);
+});
+```
+
+Through the `disconnect` event then, the server compensates the value when a client disconnects.
+
+```js
+socket.on("disconnect", () => {
+  --currentUsers;
+  io.emit("user count", currentUsers);
+});
+```
+
+Notice how `connection` is tested on `io`, the server, while `disconnect` is captured on `socket`, the socket received through the connection and describing a single instance.
+
+#### passport.socketio
+
+To know the user the socket needs to tap in the information provided by passport. To achieve this the curriculum describes a setup with three npm pacakges: `connect-mongo`, `cookie-parser` and `passport.socketio`.
+
+```json
+{
+  "dependencies": {
+    "connect-mongo": "~3.2.0",
+    "cookie-parser": "~1.4.5",
+    "passport.socketio": "~3.7.0"
+  }
+}
+```
+
+The challenge instructs to initialize the modules in the server file.
+
+```js
+const passportSocketIo = require("passport.socketio");
+const cookieParser = require("cookie-parser");
+```
+
+With `connect-mongo` specifically the idea is to create a store with the session object.
+
+```js
+const MongoStore = require("connect-mongo")(session);
+const URI = process.env.MONGO_URI;
+const store = new MongoStore({ url: URI });
+```
+
+The idea is to then use the store in the configuration of the socket library.
+
+```js
+io.use(
+  passportSocketIo.authorize({
+    cookieParser,
+    key: "express.sid",
+    secret: process.env.SESSION_SECRET,
+    store,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail,
+  })
+);
+```
+
+The setup is similar to the middleware for the session since both rely on the same authentication method, on retrieving and validating a cookie. `key` sets the name of the cookie, which for the session was left unspecified. Update the field to match to have the two connect.
+
+```js
+app.use(
+  session({
+    // ...
+    cookie: { secure: false },
+    key: "express.sid",
+    store,
+  })
+);
+```
+
+The `success` and `fail` functions are invoked with multiple parameters, among which a function to signal that the authorization has succeeded or failed.
+
+```js
+function onAuthorizeSuccess(data, accept) {
+  accept(null, true);
+}
+
+function onAuthorizeFail(data, message, error, accept) {
+  accept(null, false);
+}
+```
+
+The entire setup allows `socket.request` to retrieve the user object set in the session.
+
+```js
+console.log(`${socket.request.user.name} has connected`);
+```
+
+**Update**: as of January 2022 the instructions provided in the curriculum do not work as expected. [One issue](https://github.com/jfromaniello/passport.socketio/issues/148) on the `passport.socketio` module, at the time a deprecated module, points toward the solution:
+
+1. remove the deprecated library from `package.json` and remove any reference to the module in `server.js`
+
+2. store the session middleware in a variable
+
+   ```js
+   const sessionMiddleware = session({
+     secret: process.env.SESSION_SECRET,
+     resave: true,
+     saveUninitialized: true,
+     cookie: { secure: false },
+     key: "express.sid",
+     store,
+   });
+   ```
+
+3. pass the middleware to `app.use`
+
+   ```js
+   app.use(sessionMiddleware);
+   ```
+
+4. pass the middleware to `io.use`, but this time using a `wrap` function around the middleware
+
+   ```js
+   const wrap = (middleware) => (socket, next) =>
+     middleware(socket.request, {}, next);
+   io.use(wrap(sessionMiddleware));
+   ```
+
+5. repeat 3. and 4. adding the `passport.initialize()` and `passport.session()` middleware
+
+The only issue with this working solution is that the code no longer passes the tests set up on the curriculum. The user is however displayed in the console as being connected, and future challenges do pass the connected tests.
+
+#### socket practice
+
+To practice with the socket library the curriculum ends with two additional features shown through `chat.pug`: display when a user is connected and disconnected, display messages from a specific user.
+
+For the first feature emit a `user` event from the socket on the server, when a connection takes place:
+
+```js
+io.emit("user", {
+  name: socket.request.user.name,
+  currentUsers,
+  connected: true,
+});
+```
+
+On the client then listen for the matching event and add the relevant information in specific HTML elements.
+
+```js
+socket.on("user", ({ name, currentUsers, connected }) => {
+  $("#num-users").text(`${currentUsers} users online`);
+  const message = `${name} has ${connected ? "joined" : "left"} the chat`;
+  $("#messages").append($("<li>").html(`<b>${message}</b>`));
+});
+```
+
+For the second feature it is first necessary to consider user input, therefore the client. Following the `submit` event emit an event with the retrieved text value.
+
+```js
+$("form").submit(function () {
+  const messageToSend = $("#m").val();
+
+  socket.emit("chat message", messageToSend);
+});
+```
+
+On the server listen to the event on the individual socket and emit a corresponding event from server, adding the name of the associated user.
+
+```js
+socket.on("chat message", (message) => {
+  io.emit("chat message", {
+    name: socket.request.user.name,
+    message,
+  });
+});
+```
+
+On the client, finally, listen to the event and append the value to the destination root element.
+
+```js
+socket.on("chat message", ({ name, message }) => {
+  $("#messages").append($("li").text(`${name}: ${message}`));
+});
+```
